@@ -155,19 +155,3 @@ This project is developed for educational purposes.
 
 
 ---
-
-### If you want to push this further (recommended)
-
-Right now this README is **solid**, but you can make it *stand out* by:
-
-- Adding real screenshots (huge impact)
-- Adding a small architecture diagram (I can generate one)
-- Linking your main Botanika website repo
-- Adding a short demo GIF
-
-If you want, I can:
-- :contentReference[oaicite:0]{index=0}
-- :contentReference[oaicite:1]{index=1}
-- or :contentReference[oaicite:2]{index=2}
-
-Just tell me 👍
