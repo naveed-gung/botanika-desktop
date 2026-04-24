@@ -1,0 +1,86 @@
+# =========================
+# Build results
+# =========================
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code (optional)
+.idea/
+.vscode/
+
+# =========================
+# NuGet
+# =========================
+packages/
+*.nupkg
+*.snupkg
+
+# Keep packages.config if you use it
+!packages.config
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Auto-generated files
+# =========================
+*.Designer.cs
+*.resx
+
+# (Optional: comment these out if you DO want them tracked)
+# *.Designer.cs
+# *.resx
+
+# =========================
+# App config transforms
+# =========================
+*.config.user
+
+# =========================
+# Firebase / Secrets (IMPORTANT)
+# =========================
+*.json
+!appsettings.json
+
+# OR more specifically:
+# botanika-*-firebase-adminsdk-*.json
+
+# =========================
+# Publish output
+# =========================
+publish/
+*.publishsettings
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.cache
+
+# =========================
+# Others
+# =========================
+*.pdb
+*.mdb
+*.exe
+*.dll
+BOTANIKA_DESKTOP_SPEC.md

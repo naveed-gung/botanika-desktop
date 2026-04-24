@@ -1,0 +1,74 @@
+using System.Drawing;
+using System.Windows.Forms;
+using Botanika_Desktop.Theme;
+
+namespace Botanika_Desktop.Controls
+{
+    // A custom styled ListView that replaces the default WinForms ugly grid.
+    // Handles alternating row colors, themed headers, and proper selection highlight.
+    public class BotanikaListView : ListView
+    {
+        public BotanikaListView()
+        {
+            // These settings are needed for owner-draw to work properly
+            FullRowSelect = true;
+            GridLines     = false;
+            View          = View.Details;
+            OwnerDraw     = true;  // we draw everything ourselves
+            Font          = BotanikaFonts.Body(9.5f);
+            BackColor     = BotanikaColors.White;
+            BorderStyle   = BorderStyle.None;
+            ShowItemToolTips = true;
+        }
+
+        // Draw the column header row — dark charcoal background with white text
+        protected override void OnDrawColumnHeader(DrawListViewColumnHeaderEventArgs e)
+        {
+            // Dark green header background — matches the website's table headers
+            e.Graphics.FillRectangle(
+                new SolidBrush(BotanikaColors.Charcoal), e.Bounds);
+
+            // Add a subtle right border between columns
+            using (var borderPen = new Pen(Color.FromArgb(80, 255, 255, 255)))
+                e.Graphics.DrawLine(borderPen,
+                    e.Bounds.Right - 1, e.Bounds.Top,
+                    e.Bounds.Right - 1, e.Bounds.Bottom);
+
+            // Draw the header text
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.Header?.Text ?? "",
+                BotanikaFonts.Body(9f, FontStyle.Bold),
+                Rectangle.Inflate(e.Bounds, -4, 0),
+                Color.White,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+        }
+
+        // Draw the main item (first sub-item) — controls background color
+        protected override void OnDrawItem(DrawListViewItemEventArgs e)
+        {
+            // Selected row gets the primary green, otherwise alternate between white and sand
+            Color bg = e.Item.Selected
+                ? BotanikaColors.Primary
+                : (e.ItemIndex % 2 == 0 ? BotanikaColors.White : BotanikaColors.SandLight);
+
+            e.Graphics.FillRectangle(new SolidBrush(bg), e.Bounds);
+            e.DrawFocusRectangle();
+        }
+
+        // Draw each cell's text content
+        protected override void OnDrawSubItem(DrawListViewSubItemEventArgs e)
+        {
+            // White text when selected, charcoal otherwise
+            Color fg = e.Item.Selected ? Color.White : BotanikaColors.Charcoal;
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.SubItem?.Text ?? "",
+                BotanikaFonts.Body(9.5f),
+                Rectangle.Inflate(e.Bounds, -4, 0),
+                fg,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+        }
+    }
+}

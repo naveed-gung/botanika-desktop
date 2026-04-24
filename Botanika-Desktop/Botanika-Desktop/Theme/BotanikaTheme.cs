@@ -1,0 +1,112 @@
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Botanika_Desktop.Theme
+{
+    // One-stop shop for applying the Botanika look to any form or control tree.
+    // Call BotanikaTheme.Apply(this) at the end of any form's constructor.
+    public static class BotanikaTheme
+    {
+        // Walks the entire control tree and applies our theme to everything
+        public static void Apply(Control root)
+        {
+            // Set the root form/panel background
+            if (root is Form form)
+            {
+                form.BackColor = BotanikaColors.Offwhite;
+                form.Font      = BotanikaFonts.Body(9.5f);
+            }
+
+            ApplyToControl(root);
+        }
+
+        // Recursively themes every control in the hierarchy
+        private static void ApplyToControl(Control ctrl)
+        {
+            switch (ctrl)
+            {
+                case Button btn:
+                    StyleButton(btn);
+                    break;
+
+                case TextBox txt:
+                    StyleTextBox(txt);
+                    break;
+
+                case ComboBox cmb:
+                    StyleComboBox(cmb);
+                    break;
+
+                case Label lbl:
+                    // Don't touch labels that have already been styled manually
+                    if (lbl.ForeColor == SystemColors.ControlText)
+                        lbl.ForeColor = BotanikaColors.Charcoal;
+                    break;
+
+                case Panel pnl:
+                    // Content panels stay offwhite; sidebar panels are styled separately
+                    if (pnl.BackColor == SystemColors.Control)
+                        pnl.BackColor = BotanikaColors.Offwhite;
+                    break;
+            }
+
+            // Recurse into children
+            foreach (Control child in ctrl.Controls)
+                ApplyToControl(child);
+        }
+
+        // Botanika button style — green, rounded feel, white text
+        public static void StyleButton(Button btn)
+        {
+            btn.BackColor   = BotanikaColors.Primary;
+            btn.ForeColor   = BotanikaColors.White;
+            btn.FlatStyle   = FlatStyle.Flat;
+            btn.Font        = BotanikaFonts.Body(9.5f, FontStyle.Regular);
+            btn.Cursor      = Cursors.Hand;
+            btn.FlatAppearance.BorderSize  = 0;
+            btn.FlatAppearance.MouseOverBackColor  = BotanikaColors.PrimaryDark;
+            btn.FlatAppearance.MouseDownBackColor  = BotanikaColors.PrimaryDark;
+        }
+
+        // Danger / delete button — terracotta red
+        public static void StyleDangerButton(Button btn)
+        {
+            StyleButton(btn);
+            btn.BackColor = BotanikaColors.Terracotta;
+            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(160, 90, 50);
+            btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(140, 70, 35);
+        }
+
+        // Secondary / outlined button style
+        public static void StyleSecondaryButton(Button btn)
+        {
+            btn.BackColor   = BotanikaColors.White;
+            btn.ForeColor   = BotanikaColors.Primary;
+            btn.FlatStyle   = FlatStyle.Flat;
+            btn.Font        = BotanikaFonts.Body(9.5f);
+            btn.Cursor      = Cursors.Hand;
+            btn.FlatAppearance.BorderColor = BotanikaColors.Primary;
+            btn.FlatAppearance.BorderSize  = 1;
+            btn.FlatAppearance.MouseOverBackColor = BotanikaColors.SandLight;
+        }
+
+        // Clean input box — borderline on bottom only feel isn't easy in WinForms,
+        // so we settle for a subtle border and clean white background
+        public static void StyleTextBox(TextBox txt)
+        {
+            txt.BackColor  = BotanikaColors.White;
+            txt.ForeColor  = BotanikaColors.Charcoal;
+            txt.BorderStyle = BorderStyle.FixedSingle;
+            txt.Font       = BotanikaFonts.Body(9.5f);
+        }
+
+        // ComboBox to match our text boxes
+        public static void StyleComboBox(ComboBox cmb)
+        {
+            cmb.BackColor  = BotanikaColors.White;
+            cmb.ForeColor  = BotanikaColors.Charcoal;
+            cmb.FlatStyle  = FlatStyle.Flat;
+            cmb.Font       = BotanikaFonts.Body(9.5f);
+        }
+    }
+}
