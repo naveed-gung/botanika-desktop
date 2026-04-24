@@ -131,14 +131,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <!-- Copy the Admin SDK key from the solution root into bin\*\Assets for runtime discovery. -->
-    <Content Include="..\botanika-7781d-firebase-adminsdk-fbsvc-e3bbd01d50.json">
-      <Link>Assets\serviceAccount.json</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

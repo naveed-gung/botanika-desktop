@@ -395,11 +395,26 @@ namespace Botanika_Desktop.Firebase
         // ─── Request Builder ───────────────────────────────────────────────────
 
         // Builds a request using the service account token (for all Firestore CRUD).
-        // This automatically refreshes the token when it expires.
+        // Falls back to the user ID token when no service account config is available.
         private async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string url)
         {
-            string token = await GetServiceTokenAsync();
-            var    req   = new HttpRequestMessage(method, url);
+            string token;
+            if (_adminConfig != null)
+            {
+                token = await GetServiceTokenAsync();
+            }
+            else if (!string.IsNullOrEmpty(_idToken))
+            {
+                token = _idToken;
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "No authentication token available. Either provide a service account JSON " +
+                    "in Assets/serviceAccount.json, or sign in first.");
+            }
+
+            var req = new HttpRequestMessage(method, url);
             req.Headers.Add("Authorization", $"Bearer {token}");
             return req;
         }
