@@ -4,7 +4,7 @@ Botanika Desktop is a standalone, fully-featured administrative desktop applicat
 
 Built with **.NET Framework 4.7.2** and **Windows Forms**, this app connects directly to the exact same Firebase project as the website. While the website handles the customer-facing experience and lightweight admin controls, this desktop app provides a significantly richer management surface for inventory, financials, and CRM.
 
-## ✨ Features
+## <img src="https://api.iconify.design/lucide:sparkles.svg" width="24" height="24" align="absmiddle"> Features
 
 - **Inventory Management:** Full CRUD operations for all botanical products.
 - **Client & Supplier CRM:** Track customer orders, supplier details, and lifetime value.
@@ -14,7 +14,7 @@ Built with **.NET Framework 4.7.2** and **Windows Forms**, this app connects dir
 - **Advanced Data Export/Import:** Seamlessly export tables to **Excel (.xlsx), PDF, Word (.docx), Markdown, and CSV**. Support for bulk importing via CSV and Excel.
 - **Modern UI:** Custom-built components (`BotanikaListView`, `BotanikaButton`) designed to match the specific color palette and typography of the Botanika brand.
 
-## 🚀 Setup & Local Development
+## <img src="https://api.iconify.design/lucide:rocket.svg" width="24" height="24" align="absmiddle"> Setup & Local Development
 
 Because this application uses the **Firebase Admin SDK**, it bypasses standard security rules and has full read/write access. For security, the secret keys are **not** tracked in this repository.
 
@@ -44,7 +44,7 @@ Open the solution (`Botanika-Desktop.sln`) in Visual Studio:
   3. Optionally, install the `Costura.Fody` NuGet package to bundle all DLL dependencies into a single, clean `.exe` file.
   4. Ensure your `Assets/` folder travels alongside the `.exe` file for authentication.
 
-## 🛠 Tech Stack
+## <img src="https://api.iconify.design/lucide:wrench.svg" width="24" height="24" align="absmiddle"> Tech Stack
 
 - **C# / .NET Framework 4.7.2**
 - **WinForms** (with extensive custom-drawn controls)
