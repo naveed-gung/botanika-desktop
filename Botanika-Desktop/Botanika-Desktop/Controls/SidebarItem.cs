@@ -39,15 +39,16 @@ namespace Botanika_Desktop.Controls
             Cursor      = Cursors.Hand;
             Padding     = new Padding(0);
 
-            // Emoji icon on the left
+            // Icon on the left
+            string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", icon + ".png");
+            if (!System.IO.File.Exists(iconPath)) iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Assets", icon + ".png");
+
             _iconLabel = new Label
             {
-                Text      = icon,
-                Font      = new Font("Segoe UI Emoji", 14f),
-                ForeColor = Color.White,
+                Image = System.IO.File.Exists(iconPath) ? Image.FromFile(iconPath) : null,
+                ImageAlign = ContentAlignment.MiddleCenter,
                 Size      = new Size(44, 44),
-                Location  = new Point(0, 0),
-                TextAlign = ContentAlignment.MiddleCenter
+                Location  = new Point(0, 0)
             };
 
             // Section name text

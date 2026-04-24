@@ -80,14 +80,19 @@ namespace Botanika_Desktop.Forms
                 Location = new Point(0, 0),
                 BackColor = Color.FromArgb(30, 0, 0, 0) // slightly darker than sidebar
             };
+            string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "logo.png");
+            if (!System.IO.File.Exists(iconPath)) iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Assets", "logo.png");
+            var pb = new PictureBox { Image = System.IO.File.Exists(iconPath) ? Image.FromFile(iconPath) : null, SizeMode = PictureBoxSizeMode.Zoom, Size = new Size(24, 24), Location = new Point(16, 16) };
+            logoPanel.Controls.Add(pb);
+
             var logoLabel = new Label
             {
-                Text = "🌿 BOTANIKA",
+                Text = "BOTANIKA",
                 Font = BotanikaFonts.Heading(14f, FontStyle.Bold),
                 ForeColor = BotanikaColors.Primary,
                 TextAlign = ContentAlignment.MiddleLeft,
-                Size = new Size(180, 40),
-                Location = new Point(16, 8)
+                Size = new Size(130, 40),
+                Location = new Point(46, 8)
             };
             var adminBadge = new Label
             {
@@ -131,14 +136,14 @@ namespace Botanika_Desktop.Forms
             // The order here matches the spec — most important sections first
             var navDefs = new[]
             {
-                ("📊", "Dashboard",  "Dashboard"),
-                ("🌿", "Products",   "Products"),
-                ("👥", "Clients",    "Clients"),
-                ("🚚", "Suppliers",  "Suppliers"),
-                ("📦", "Orders",     "Orders"),
-                ("💰", "Revenue",    "Revenue"),
-                ("💳", "Payments",   "Payments"),
-                ("🤖", "AI Chatbot", "Chatbot"),
+                ("dashboard", "Dashboard",  "Dashboard"),
+                ("leaf", "Products",   "Products"),
+                ("clients", "Clients",    "Clients"),
+                ("suppliers", "Suppliers",  "Suppliers"),
+                ("orders", "Orders",     "Orders"),
+                ("revenue", "Revenue",    "Revenue"),
+                ("payments", "Payments",   "Payments"),
+                ("chatbot", "AI Chatbot", "Chatbot"),
             };
 
             foreach (var (icon, text, section) in navDefs)
