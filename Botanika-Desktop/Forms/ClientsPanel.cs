@@ -95,7 +95,7 @@ namespace Botanika_Desktop.Forms
             
             _clientAvatars = new ImageList { ImageSize = new Size(32, 32), ColorDepth = ColorDepth.Depth32Bit };
             _clientAvatars.Images.Add("default", GenerateDefaultAvatar());
-            _listView.SmallImageList = _clientAvatars;
+            _listView.CustomImageList = _clientAvatars;
             _listView.Columns.AddRange(new[]
             {
                 new ColumnHeader { Text = "Name",        Width = 180 },

@@ -21,9 +21,10 @@ namespace Botanika_Desktop.Controls
             BorderStyle   = BorderStyle.None;
             ShowItemToolTips = true;
 
-            // Use native double buffering to prevent hover glitches
             // (WinForms SetStyle causes the text to disappear on hover)
         }
+
+        public ImageList CustomImageList { get; set; }
 
         private bool _initialized;
         protected override void OnHandleCreated(System.EventArgs e)
@@ -38,51 +39,11 @@ namespace Botanika_Desktop.Controls
             if (!_initialized)
             {
                 _initialized = true;
-                // Move down slightly
                 Top += 25;
-                // Scale columns by 30% to make the table wider and more spacious
-                foreach (ColumnHeader col in Columns)
-                {
-                    if (col.Width > 0) col.Width = (int)(col.Width * 1.35);
-                }
             }
-        }
-
-        protected override void OnResize(System.EventArgs e)
+        }        protected override void OnResize(System.EventArgs e)
         {
             base.OnResize(e);
-            AdjustColumns();
-        }
-
-        public void AdjustColumns()
-        {
-            if (Columns.Count == 0 || ClientSize.Width == 0) return;
-            
-            int totalFixed = 0;
-            int flexCol = -1;
-            
-            // Find a good column to stretch (Description or Name, otherwise the second to last)
-            for (int i = 0; i < Columns.Count; i++)
-            {
-                if (Columns[i].Width == 0) continue;
-                if (Columns[i].Text.ToLower().Contains("description") || Columns[i].Text.ToLower().Contains("name") || Columns[i].Text.ToLower().Contains("party"))
-                    flexCol = i;
-            }
-            
-            if (flexCol == -1) flexCol = Columns.Count - 2;
-            if (flexCol < 0) flexCol = 0;
-
-            for (int i = 0; i < Columns.Count; i++)
-            {
-                if (i != flexCol && Columns[i].Width > 0)
-                    totalFixed += Columns[i].Width;
-            }
-            
-            int flexWidth = ClientSize.Width - totalFixed - 4; // 4 for borders/padding
-            if (flexWidth > 50 && Columns[flexCol].Width > 0)
-            {
-                Columns[flexCol].Width = flexWidth;
-            }
         }
 
         // Auto-size the list to fit its content — no endless whitespace
@@ -102,7 +63,13 @@ namespace Botanika_Desktop.Controls
             int contentHeight = 40 + (Items.Count * 36) + 4;
             Height = System.Math.Max(minHeight, System.Math.Min(contentHeight, maxHeight));
             
-            // We let the container manage width (responsive)
+            int totalW = 0;
+            foreach (ColumnHeader col in Columns) totalW += col.Width;
+            if (totalW > 0)
+            {
+                Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                Width = totalW + 4; 
+            }
         }
 
         // Draw the column header row — dark charcoal background with white text
@@ -153,9 +120,9 @@ namespace Botanika_Desktop.Controls
             Rectangle textBounds = Rectangle.Inflate(e.Bounds, -10, 0);
 
             // Draw image if available for the first column
-            if (e.ColumnIndex == 0 && this.SmallImageList != null && e.Item.ImageIndex >= 0 && e.Item.ImageIndex < this.SmallImageList.Images.Count)
+            if (e.ColumnIndex == 0 && this.CustomImageList != null && e.Item.ImageIndex >= 0 && e.Item.ImageIndex < this.CustomImageList.Images.Count)
             {
-                Image img = this.SmallImageList.Images[e.Item.ImageIndex];
+                Image img = this.CustomImageList.Images[e.Item.ImageIndex];
                 if (img != null)
                 {
                     // Draw a circular avatar
