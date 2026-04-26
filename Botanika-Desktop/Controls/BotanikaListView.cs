@@ -21,8 +21,40 @@ namespace Botanika_Desktop.Controls
             BorderStyle   = BorderStyle.None;
             ShowItemToolTips = true;
 
-            // Double buffering reduces flicker during redraws
-            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            // Use native double buffering to prevent hover glitches
+            // (WinForms SetStyle causes the text to disappear on hover)
+        }
+
+        protected override void OnHandleCreated(System.EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            // LVM_SETEXTENDEDLISTVIEWSTYLE = 0x1036, LVS_EX_DOUBLEBUFFER = 0x10000
+            System.Windows.Forms.Message m = System.Windows.Forms.Message.Create(Handle, 0x1036, (System.IntPtr)0x10000, (System.IntPtr)0x10000);
+            DefWndProc(ref m);
+        }
+
+        protected override void OnResize(System.EventArgs e)
+        {
+            base.OnResize(e);
+            AdjustColumns();
+        }
+
+        private void AdjustColumns()
+        {
+            if (Columns.Count == 0) return;
+            
+            int fixedWidth = 0;
+            // Sum all columns except the first one
+            for (int i = 1; i < Columns.Count; i++)
+            {
+                fixedWidth += Columns[i].Width;
+            }
+            
+            int newWidth = ClientSize.Width - fixedWidth - SystemInformation.VerticalScrollBarWidth - 2;
+            if (newWidth > 100)
+            {
+                Columns[0].Width = newWidth;
+            }
         }
 
         // Auto-size the list to fit its content — no endless whitespace

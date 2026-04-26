@@ -113,6 +113,16 @@ namespace Botanika_Desktop.Forms
             };
             BuildQuickActions();
 
+            var inputWrapper = new Panel
+            {
+                BackColor = BotanikaColors.SandLight,
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                Height = 44,
+                Padding = new Padding(16, 12, 16, 12)
+            };
+            inputWrapper.HandleCreated += (s, e) => BotanikaTheme.ApplyRoundedCorners(inputWrapper, 22);
+            inputWrapper.SizeChanged += (s, e) => BotanikaTheme.ApplyRoundedCorners(inputWrapper, 22);
+
             _inputBox = new TextBox
             {
                 Font = BotanikaFonts.Body(10.5f),
@@ -120,8 +130,7 @@ namespace Botanika_Desktop.Forms
                 BackColor = BotanikaColors.SandLight,
                 BorderStyle = BorderStyle.None,
                 Text = "Ask about inventory, orders, clients...",
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                Height = 32
+                Dock = DockStyle.Fill
             };
             _inputBox.GotFocus += (s, e) => {
                 if (_inputBox.Text == "Ask about inventory, orders, clients...") {
@@ -138,6 +147,8 @@ namespace Botanika_Desktop.Forms
             _inputBox.KeyDown += (s, e) => {
                 if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; SendMessage(); }
             };
+
+            inputWrapper.Controls.Add(_inputBox);
 
             _sendBtn = new Button
             {
@@ -156,8 +167,11 @@ namespace Botanika_Desktop.Forms
 
             // Layout bottom panel
             bottomPanel.Controls.Add(_quickActions);
-            bottomPanel.Controls.Add(_inputBox);
+            bottomPanel.Controls.Add(inputWrapper);
             bottomPanel.Controls.Add(_sendBtn);
+            
+            // Layout helper to store the wrapper ref
+            inputWrapper.Tag = "wrapper";
 
             bottomPanel.Resize += (s, e) => LayoutBottom();
 
@@ -170,13 +184,18 @@ namespace Botanika_Desktop.Forms
 
         private void LayoutBottom()
         {
-            var parent = _inputBox.Parent;
+            var parent = _sendBtn.Parent;
             if (parent == null || parent.ClientSize.Width <= 0) return;
             int pad = 24;
-            int y = 46;
-            _inputBox.Location = new Point(pad, y);
-            _inputBox.Size = new Size(parent.ClientSize.Width - pad * 2 - 54, 32);
-            _sendBtn.Location = new Point(parent.ClientSize.Width - pad - 44, y);
+            int y = 50;
+            var wrapper = parent.Controls.OfType<Panel>().FirstOrDefault(p => (string)p.Tag == "wrapper");
+            if (wrapper != null)
+            {
+                wrapper.Location = new Point(pad, y);
+                wrapper.Size = new Size(parent.ClientSize.Width - pad * 2 - 54, 44);
+            }
+            _sendBtn.Location = new Point(parent.ClientSize.Width - pad - 44, y + 4);
+            BotanikaTheme.ApplyRoundedCorners(_sendBtn, 16);
         }
 
         private void BuildQuickActions()
@@ -206,9 +225,10 @@ namespace Botanika_Desktop.Forms
                     Cursor = Cursors.Hand,
                     Height = 28
                 };
-                btn.FlatAppearance.BorderSize = 1;
-                btn.FlatAppearance.BorderColor = BotanikaColors.Sand;
+                btn.FlatAppearance.BorderSize = 0;
                 btn.FlatAppearance.MouseOverBackColor = BotanikaColors.Sand;
+                btn.HandleCreated += (s, e) => BotanikaTheme.ApplyRoundedCorners(btn, 14);
+                btn.SizeChanged += (s, e) => BotanikaTheme.ApplyRoundedCorners(btn, 14);
                 btn.Click += (s, e) => HandleQuickAction((string)((Button)s).Tag);
                 _quickActions.Controls.Add(btn);
             }
@@ -444,15 +464,21 @@ namespace Botanika_Desktop.Forms
                 return GetInactiveUsersReport();
             }
 
-            if (ContainsAny(q, "name", "email", "list client", "list customer", "who are", "their name", "their email", "show client", "show customer"))
+            if (ContainsAny(q, "name", "email", "list client", "list customer", "who are", "their name", "their email", "show client", "show customer", "there emails", "emails"))
             {
                 if (_clients.Count == 0) return "No clients registered yet.";
-                var sb = new StringBuilder($"All {_clients.Count} clients:\n\n");
+                var sb = new StringBuilder();
+                bool wantEmail = ContainsAny(q, "email");
+                bool wantName = ContainsAny(q, "name");
+                
+                sb.AppendLine($"Here are the requested client details:\n");
                 foreach (var c in _clients)
                 {
                     string name = c.Name ?? "Unknown";
                     string email = c.Email ?? "no email";
-                    sb.AppendLine($"• {name} — {email}");
+                    if (wantEmail && !wantName) sb.AppendLine($"• {email}");
+                    else if (wantName && !wantEmail) sb.AppendLine($"• {name}");
+                    else sb.AppendLine($"• {name} — {email}");
                 }
                 return sb.ToString().TrimEnd();
             }
@@ -635,9 +661,9 @@ namespace Botanika_Desktop.Forms
             }
 
             // ── Conversational catch-alls ─────────────────────────────────────
-            if (ContainsAny(q, "what can", "what do", "who are", "tell me about"))
+            if (ContainsAny(q, "what can", "what do", "who are", "tell me about", "are you"))
             {
-                if (ContainsAny(q, "you", "bot")) return "I'm your Botanika assistant! I know about your products, orders, clients, and revenue. Type \"help\" to see all my capabilities!";
+                if (ContainsAny(q, "you", "bot")) return "I'm your smart Botanika assistant! I know about your products, orders, clients, and revenue. Type \"help\" to see all my capabilities!";
                 if (ContainsAny(q, "store", "shop", "botanika")) return GetInventoryOverview();
             }
 

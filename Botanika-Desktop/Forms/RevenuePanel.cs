@@ -102,23 +102,17 @@ namespace Botanika_Desktop.Forms
 
             var refreshBtn = new Button
             {
-                Text      = "↻ Refresh",
-                Size      = new Size(90, 28),
-                Location  = new Point(pad + 700, 200),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Font      = BotanikaFonts.Body(9f),
-                Cursor    = Cursors.Hand
+                Text      = "⟳ Refresh Data",
+                Size      = new Size(130, 32),
+                Location  = new Point(pad + 690, 200)
             };
-            refreshBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            refreshBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(refreshBtn);
             refreshBtn.Click += async (s, e) => await LoadDataAsync();
 
             Controls.AddRange(new Control[]
             {
-                header, subheader,
-                chartTitle, refreshBtn, _chartArea, _statusLabel
+                header, subheader, refreshBtn,
+                chartTitle, _chartArea, _statusLabel
             });
         }
 

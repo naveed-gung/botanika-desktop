@@ -111,17 +111,11 @@ namespace Botanika_Desktop.Forms
             // ── Refresh button ─────────────────────────────────────────────────
             var refreshBtn = new Button
             {
-                Text      = "↻ Refresh",
-                Size      = new Size(90, 28),
-                Location  = new Point(padding + 800, 240),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Font      = BotanikaFonts.Body(9f),
-                Cursor    = Cursors.Hand
+                Text      = "⟳ Refresh",
+                Size      = new Size(110, 32),
+                Location  = new Point(padding + 790, 235)
             };
-            refreshBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            refreshBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(refreshBtn);
             refreshBtn.Click += async (s, e) => await LoadDashboardDataAsync();
 
             Controls.AddRange(new Control[]

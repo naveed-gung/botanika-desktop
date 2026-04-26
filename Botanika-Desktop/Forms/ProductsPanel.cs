@@ -91,29 +91,18 @@ namespace Botanika_Desktop.Forms
             {
                 Text      = "+ Add Product",
                 Size      = new Size(120, 32),
-                Location  = new Point(pad + 700, 68),
-                Font      = BotanikaFonts.Body(9.5f, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.Primary,
-                ForeColor = Color.White,
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 700, 68)
             };
-            addBtn.FlatAppearance.BorderSize = 0;
+            BotanikaTheme.StyleButton(addBtn);
             addBtn.Click += (s, e) => AddNew();
 
             var importBtn = new Button
             {
                 Text      = "⬆ Import",
                 Size      = new Size(90, 32),
-                Location  = new Point(pad + 600, 68),
-                Font      = BotanikaFonts.Body(9.5f),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 600, 68)
             };
-            importBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            importBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(importBtn);
             importBtn.Click += (s, e) => ImportProducts();
 
             // Export dropdown button — shows all 5 format options
@@ -121,15 +110,9 @@ namespace Botanika_Desktop.Forms
             {
                 Text      = "⬇ Export ▾",
                 Size      = new Size(100, 32),
-                Location  = new Point(pad + 490, 68),
-                Font      = BotanikaFonts.Body(9.5f),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 490, 68)
             };
-            exportBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            exportBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(exportBtn);
             exportBtn.Click += (s, e) => ShowExportMenu(exportBtn);
 
             // ── ListView ───────────────────────────────────────────────────────

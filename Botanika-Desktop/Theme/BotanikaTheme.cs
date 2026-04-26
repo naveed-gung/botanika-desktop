@@ -83,14 +83,16 @@ namespace Botanika_Desktop.Theme
         // Secondary / outlined button style
         public static void StyleSecondaryButton(Button btn)
         {
-            btn.BackColor   = BotanikaColors.White;
-            btn.ForeColor   = BotanikaColors.Primary;
+            btn.BackColor   = BotanikaColors.SandLight;
+            btn.ForeColor   = BotanikaColors.Charcoal;
             btn.FlatStyle   = FlatStyle.Flat;
-            btn.Font        = BotanikaFonts.Body(9.5f);
+            btn.Font        = BotanikaFonts.Body(9.5f, FontStyle.Bold);
             btn.Cursor      = Cursors.Hand;
-            btn.FlatAppearance.BorderColor = BotanikaColors.Primary;
-            btn.FlatAppearance.BorderSize  = 1;
-            btn.FlatAppearance.MouseOverBackColor = BotanikaColors.SandLight;
+            btn.FlatAppearance.BorderColor = BotanikaColors.SandLight;
+            btn.FlatAppearance.BorderSize  = 0;
+            btn.FlatAppearance.MouseOverBackColor = BotanikaColors.Sand;
+            btn.HandleCreated += (s, e) => ApplyRoundedCorners(btn, 12);
+            btn.SizeChanged   += (s, e) => ApplyRoundedCorners(btn, 12);
         }
 
         // Clean input box — borderline on bottom only feel isn't easy in WinForms,

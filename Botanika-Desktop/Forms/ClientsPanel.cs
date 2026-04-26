@@ -71,29 +71,18 @@ namespace Botanika_Desktop.Forms
             {
                 Text      = "+ Add Client",
                 Size      = new Size(110, 32),
-                Location  = new Point(pad + 700, 68),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.Primary,
-                ForeColor = Color.White,
-                Font      = BotanikaFonts.Body(9.5f, FontStyle.Bold),
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 700, 68)
             };
-            addBtn.FlatAppearance.BorderSize = 0;
+            BotanikaTheme.StyleButton(addBtn);
             addBtn.Click += (s, e) => AddNew();
 
             var exportBtn = new Button
             {
                 Text      = "⬇ Export CSV",
                 Size      = new Size(110, 32),
-                Location  = new Point(pad + 580, 68),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Font      = BotanikaFonts.Body(9.5f),
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 580, 68)
             };
-            exportBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            exportBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(exportBtn);
             exportBtn.Click += (s, e) => ExportData();
 
             _listView = new BotanikaListView
