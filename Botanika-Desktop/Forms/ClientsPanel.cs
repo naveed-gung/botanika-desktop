@@ -160,7 +160,10 @@ namespace Botanika_Desktop.Forms
                 {
                     try
                     {
-                        var bytes = Convert.FromBase64String(c.ProfilePicture);
+                        string b64 = c.ProfilePicture;
+                        if (b64.Contains(",")) b64 = b64.Substring(b64.IndexOf(",") + 1);
+
+                        var bytes = Convert.FromBase64String(b64);
                         using (var ms = new System.IO.MemoryStream(bytes))
                         {
                             _clientAvatars.Images.Add(c.Id, Image.FromStream(ms));

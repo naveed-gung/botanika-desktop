@@ -73,8 +73,8 @@ namespace Botanika_Desktop.Forms
             var _adminAvatar = new PictureBox
             {
                 Size = new Size(48, 48),
-                Location = new Point(45, 36),
-                SizeMode = PictureBoxSizeMode.Zoom,
+                Location = new Point(30, 36), // Align with divider
+                SizeMode = PictureBoxSizeMode.StretchImage,
                 BackColor = Color.Transparent,
                 Visible = false // hidden until loaded
             };
@@ -451,12 +451,24 @@ namespace Botanika_Desktop.Forms
                 var admin = users.FirstOrDefault(c => c.Email == "admin@botanika.com" || c.Role == "admin");
                 if (admin != null && !string.IsNullOrEmpty(admin.ProfilePicture))
                 {
-                    var bytes = Convert.FromBase64String(admin.ProfilePicture);
+                    string b64 = admin.ProfilePicture;
+                    if (b64.Contains(",")) b64 = b64.Substring(b64.IndexOf(",") + 1);
+
+                    var bytes = Convert.FromBase64String(b64);
                     using (var ms = new System.IO.MemoryStream(bytes))
                     {
                         var img = Image.FromStream(ms);
+                        // Crop to square
+                        int min = Math.Min(img.Width, img.Height);
+                        var cropRect = new Rectangle((img.Width - min) / 2, (img.Height - min) / 2, min, min);
+                        var squareBmp = new Bitmap(min, min);
+                        using (var g = Graphics.FromImage(squareBmp))
+                        {
+                            g.DrawImage(img, new Rectangle(0, 0, min, min), cropRect, GraphicsUnit.Pixel);
+                        }
+
                         picBox.Invoke((MethodInvoker)delegate {
-                            picBox.Image = new Bitmap(img); // clone to avoid stream closed issues
+                            picBox.Image = squareBmp;
                             var path = new System.Drawing.Drawing2D.GraphicsPath();
                             path.AddEllipse(0, 0, picBox.Width, picBox.Height);
                             picBox.Region = new Region(path);

@@ -69,12 +69,15 @@ namespace Botanika_Desktop.Controls
             {
                 if (col.Width > 0)
                 {
-                    int originalWidth = col.Width;
+                    if (col.Tag == null) col.Tag = col.Width;
+                    int designWidth = (int)col.Tag;
+                    
                     col.Width = -2; // auto resize to fit header and content
-                    if (col.Width < originalWidth) col.Width = originalWidth; // prevent shrinking below design
                     
                     // Add a tiny bit of padding
                     col.Width += 10;
+                    
+                    if (col.Width < designWidth) col.Width = designWidth; // prevent shrinking below design
                     
                     totalW += col.Width;
                 }
@@ -82,7 +85,7 @@ namespace Botanika_Desktop.Controls
             if (totalW > 0)
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                Width = totalW + 4; 
+                Width = totalW + 20; 
             }
         }
 
