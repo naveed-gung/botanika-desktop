@@ -14,7 +14,7 @@ namespace Botanika_Desktop.Forms
 {
     // Smart admin chatbot — mirrors the website's BotanikaBot with full
     // inventory, orders, clients, and revenue intelligence.
-    public class ChatbotPanel : UserControl
+    public class ChatbotPanel : UserControl, IRefreshable
     {
         private Panel       _chatArea;
         private TextBox     _inputBox;
@@ -36,6 +36,11 @@ namespace Botanika_Desktop.Forms
             DoubleBuffered = true;
             BuildUI();
             AddBotMessage("Hello! I'm your Botanika assistant. I can help you with inventory, orders, clients, revenue, and product insights. Loading your data now...");
+            _ = LoadAllDataAsync();
+        }
+
+        public new void Refresh()
+        {
             _ = LoadAllDataAsync();
         }
 

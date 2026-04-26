@@ -16,7 +16,7 @@ namespace Botanika_Desktop.Controls
             GridLines     = false;
             View          = View.Details;
             OwnerDraw     = true;  // we draw everything ourselves
-            Font          = BotanikaFonts.Body(9.5f);
+            Font          = BotanikaFonts.Body(10.5f);
             BackColor     = BotanikaColors.White;
             BorderStyle   = BorderStyle.None;
             ShowItemToolTips = true;
@@ -28,9 +28,11 @@ namespace Botanika_Desktop.Controls
         protected override void OnHandleCreated(System.EventArgs e)
         {
             base.OnHandleCreated(e);
-            // LVM_SETEXTENDEDLISTVIEWSTYLE = 0x1036, LVS_EX_DOUBLEBUFFER = 0x10000
-            System.Windows.Forms.Message m = System.Windows.Forms.Message.Create(Handle, 0x1036, (System.IntPtr)0x10000, (System.IntPtr)0x10000);
-            DefWndProc(ref m);
+            
+            // Enable native double buffering properly using Reflection
+            System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", 
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            aProp?.SetValue(this, true, null);
         }
 
         protected override void OnResize(System.EventArgs e)
@@ -41,37 +43,13 @@ namespace Botanika_Desktop.Controls
 
         public void AdjustColumns()
         {
-            if (Columns.Count == 0 || ClientSize.Width == 0) return;
-            
-            int currentTotal = 0;
-            int visibleCount = 0;
-            foreach (ColumnHeader col in Columns)
-            {
-                if (col.Width > 0) 
-                {
-                    currentTotal += col.Width;
-                    visibleCount++;
-                }
-            }
-            if (visibleCount == 0 || currentTotal == 0) return;
-
-            int available = ClientSize.Width - 4; 
-            if (available <= currentTotal) return; 
-
-            double ratio = (double)available / currentTotal;
-            foreach (ColumnHeader col in Columns)
-            {
-                if (col.Width > 0)
-                {
-                    col.Width = (int)(col.Width * ratio);
-                }
-            }
+            // Removed proportional scaling to keep columns tight.
+            // We now rely on AutoFitWidth to shrink the table itself.
         }
 
         // Auto-size the list to fit its content — no endless whitespace
         public void AutoFitHeight(int minHeight = 80, int maxHeight = 600)
         {
-            AdjustColumns();
             if (Items.Count == 0)
             {
                 Height = minHeight;
@@ -81,6 +59,16 @@ namespace Botanika_Desktop.Controls
             // Each row is roughly 24px, header is ~28px
             int contentHeight = 28 + (Items.Count * 24) + 4;
             Height = System.Math.Max(minHeight, System.Math.Min(contentHeight, maxHeight));
+            
+            // Also fit width to columns to prevent the gray infinite space
+            int totalW = 0;
+            foreach (ColumnHeader col in Columns) totalW += col.Width;
+            if (totalW > 0)
+            {
+                // Unhook right anchor so it can shrink
+                Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                Width = totalW + 4; 
+            }
         }
 
         // Draw the column header row — dark charcoal background with white text
@@ -100,7 +88,7 @@ namespace Botanika_Desktop.Controls
             TextRenderer.DrawText(
                 e.Graphics,
                 e.Header?.Text ?? "",
-                BotanikaFonts.Body(9f, FontStyle.Bold),
+                BotanikaFonts.Body(10f, FontStyle.Bold),
                 Rectangle.Inflate(e.Bounds, -4, 0),
                 Color.White,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
@@ -134,7 +122,7 @@ namespace Botanika_Desktop.Controls
             TextRenderer.DrawText(
                 e.Graphics,
                 e.SubItem?.Text ?? "",
-                BotanikaFonts.Body(9.5f),
+                BotanikaFonts.Body(10.5f),
                 Rectangle.Inflate(e.Bounds, -4, 0),
                 fg,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);

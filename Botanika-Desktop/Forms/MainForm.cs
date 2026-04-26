@@ -24,6 +24,9 @@ namespace Botanika_Desktop.Forms
 
         // The panel that's currently displayed in the content area
         private UserControl _currentPanel;
+        
+        // Cache panels so state (like Chatbot history) is preserved
+        private Dictionary<string, UserControl> _panelCache = new Dictionary<string, UserControl>();
 
         public MainForm()
         {
@@ -259,27 +262,32 @@ namespace Botanika_Desktop.Forms
                 item.IsActive = item.SectionName == sectionName;
 
             // Create the appropriate panel for this section
-            UserControl panel;
-            switch (sectionName)
+            if (!_panelCache.TryGetValue(sectionName, out UserControl panel))
             {
-                case "Dashboard": panel = new DashboardPanel(); break;
-                case "Products": panel = new ProductsPanel(); break;
-                case "Clients": panel = new ClientsPanel(); break;
-                case "Suppliers": panel = new SuppliersPanel(); break;
-                case "Orders": panel = new OrdersPanel(); break;
-                case "Revenue": panel = new RevenuePanel(); break;
-                case "Payments": panel = new PaymentsPanel(); break;
-                case "Chatbot": panel = new ChatbotPanel(); break;
-                default: panel = new DashboardPanel(); break;
+                switch (sectionName)
+                {
+                    case "Dashboard": panel = new DashboardPanel(); break;
+                    case "Products": panel = new ProductsPanel(); break;
+                    case "Clients": panel = new ClientsPanel(); break;
+                    case "Suppliers": panel = new SuppliersPanel(); break;
+                    case "Orders": panel = new OrdersPanel(); break;
+                    case "Revenue": panel = new RevenuePanel(); break;
+                    case "Payments": panel = new PaymentsPanel(); break;
+                    case "Chatbot": panel = new ChatbotPanel(); break;
+                    default: panel = new DashboardPanel(); break;
+                }
+                _panelCache[sectionName] = panel;
             }
 
-            // Swap in the new panel
+            // Swap in the new panel (but don't dispose the old one since it's cached)
             _contentPanel.Controls.Clear();
-            _currentPanel?.Dispose();  // clean up the old panel
             _currentPanel = panel;
             panel.Dock = DockStyle.Fill;
             _contentPanel.Controls.Add(panel);
             panel.BringToFront();
+            
+            // Auto-refresh when navigating back to a panel
+            (panel as IRefreshable)?.Refresh();
         }
 
         // ─── Keyboard Shortcuts ────────────────────────────────────────────────
