@@ -11,147 +11,92 @@
 
 ## Overview
 
-**Botanika Desktop** is a Windows-based administrative application built using **C# WinForms**.  
-It was developed as an extended implementation of a basic CRUD assignment, evolving into a more complete **admin management system**.
+**Botanika Desktop** is a modern Windows-based administrative application built using **C# WinForms**.  
+It serves as the **administrative CRM counterpart** to the [Botanika E-commerce Platform](https://botanika-754.netlify.app), enabling structured real-time management of business data such as products, clients, orders, and payments.
 
-The application serves as the **administrative counterpart** to the Botanika platform, enabling structured management of business data such as products, clients, orders, and payments.
-
----
-
-## Project Requirements (Original Assignment)
-
-The project was required to include:
-
-- Admin Login Form  
-- Home Form with a ListBox  
-- CRUD operations (Create, Read, Update, Delete)  
-- Import / Export functionality  
-- Optional bonus features  
+This application has been significantly polished to feature a rich, modern, SaaS-like dashboard, dynamic sidebar icons, and robust error handling.
 
 ---
 
 ## Implemented Features
 
-This project significantly expands beyond the original requirements.
-
 ### Core Functionality
+- **Secure Admin Authentication:** Validates login credentials against Firebase Auth REST APIs and ensures admin-only access.
+- **Real-Time Dashboard:** A modern UI displaying key business metrics (Total Revenue, Orders, Products, Clients) fetched directly from Firestore.
+- **Full CRUD Operations:** Manage Products, Clients, Orders, Payments, and Suppliers effortlessly.
 
-- Secure **Admin Authentication System**
-- Dashboard with modular panels
-- Full CRUD operations across multiple entities:
-  - Products
-  - Clients
-  - Orders
-  - Payments
-  - Suppliers
+### Data Management & Backend
+- **Custom Firebase Integration:** Direct integration with Google Cloud Firestore using a zero-dependency C# HTTP bridge (`FirebaseService.cs`).
+- **PKCS#8 JWT Authentication:** Robust logic that mints service account tokens securely on the fly without heavy dependencies.
+- **Structured Data Models:** Strongly-typed entity mappings (`Product.cs`, `Order.cs`, etc.).
 
-### Data Management
-
-- Firebase integration for real-time data handling
-- Structured models for all entities
-- Centralized service layer (`FirebaseService.cs`)
-
-### Import / Export
-
-- CSV Export
-- Markdown Export
-- Data Import Handler
-
-### UI System
-
-- Custom reusable components:
+### UI System & Aesthetics
+- **SaaS-Style Modern Layout:** Designed with a clean, high-contrast dark-mode sidebar, rounded corner panels, and smooth typography (`BotanikaFonts.cs`).
+- **Custom Reusable Components:** 
   - `BotanikaButton`
   - `BotanikaListView`
-  - `SidebarItem`
+  - `SidebarItem` (with SVG-derived auto-scaling PNG icons)
   - `ToastNotification`
-
-- Theming system:
-  - Centralized color palette
-  - Font management
-  - Consistent UI styling
-
-### Additional Features (Bonus)
-
-- Chatbot panel interface
-- Revenue tracking dashboard
-- Modular panel navigation system
-- Session handling system
+- **Dynamic Theming:** Configurable application-wide theme values (`BotanikaColors.cs`).
 
 ---
 
 ## Architecture
 
 The project follows a **modular and layered structure**:
-Forms/ → UI and user interaction
-Controls/ → Reusable UI components
-Firebase/ → Data models and backend service
-Export/ → Data import/export logic
-Theme/ → Styling and UI consistency
-Session.cs → Application state management
-
-This separation improves maintainability, scalability, and readability.
+- `Forms/` → UI and user interaction
+- `Controls/` → Reusable custom WinForms UI components
+- `Firebase/` → Data models, serializers, and the custom backend service
+- `Export/` → Data export logic (CSV, Markdown)
+- `Theme/` → Styling definitions and color palettes
+- `Session.cs` → Secure application state management
 
 ---
 
 ## Technologies Used
 
-- **C# (.NET Framework / WinForms)**
-- **Firebase (Firestore / Realtime DB via Admin SDK)**
+- **C# (.NET Framework 4.7.2)**
+- **Firebase Firestore & Authentication (REST APIs)**
 - **Newtonsoft.Json**
-- Custom UI components and theming system
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-
-- Visual Studio (recommended)
-- .NET Framework installed
-- Firebase project
+- Visual Studio 2022 (recommended)
+- .NET Framework 4.7.2
 
 ### Setup
 
-1. Clone the repository:
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/naveed-gung/botanika-desktop.git
+   ```
 
-```bash
-git clone https://github.com/your-username/botanika-desktop.git
-```
+2. **Configure Firebase Credentials:**
+   To securely connect to Firestore, you must provide your private Firebase keys.
+   - Create a folder named `Assets` in the root of the executable or project directory if it doesn't exist.
+   - Add your **Firebase Admin SDK JSON file** and rename it to `serviceAccount.json`.
+   - Add your **Web API Key** to a file named `firebase_api_key.txt`.
+   
+   *Note: Both of these files are automatically ignored by Git to prevent accidental exposure.*
 
-2. Open the solution:
-   Botanika-Desktop.sln
-
-3. Configure Firebase:
-- Add your Firebase Admin SDK JSON file
-- Do NOT commit this file to GitHub
-4. Build and run the project
-
-Security Notice
-
-Sensitive files such as Firebase credentials are excluded via .gitignore.
-
-Example:
-
-botanika-*-firebase-adminsdk-*.json
-
-Ensure your credentials are stored securely and never pushed to version control.
-
-Screenshots
-
-Add screenshots here if needed
-
-Future Improvements
-Role-based access control
-Advanced analytics dashboard
-API abstraction layer
-Migration to WPF or web-based admin panel
-Related Project
-
-Botanika Desktop is designed as the administrative interface for the Botanika ecosystem.
-
-License
-
-This project is developed for educational purposes.
-
+3. **Build and Run:**
+   Open `Botanika-Desktop.sln` in Visual Studio and hit `F5` to run the application.
 
 ---
+
+## Security Notice
+
+**Safe Git Pushing:** Sensitive files such as `serviceAccount.json` and `firebase_api_key.txt` have been explicitly added to the `.gitignore` file. Any pushes to GitHub are **completely safe**, and your credentials will not be uploaded.
+
+---
+
+## Future Improvements
+- Role-based access control (RBAC) via Firestore Custom Claims
+- Advanced analytics dashboard with graphing libraries
+- Data export to PDF functionality
+
+## License
+This project is developed for educational and portfolio purposes.

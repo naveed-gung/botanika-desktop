@@ -177,7 +177,7 @@ namespace Botanika_Desktop.Forms
             // LinkedIn → GitHub → Portfolio  (same order as website)
             var linkedInBtn = new Button
             {
-                Text = "LinkedIn",
+                Text = "🔗  LinkedIn",
                 Size = new Size(180, 30),
                 Location = new Point(20, _sidebar.Height - 172),
                 FlatStyle = FlatStyle.Flat,
@@ -194,7 +194,7 @@ namespace Botanika_Desktop.Forms
 
             var githubBtn = new Button
             {
-                Text = "GitHub",
+                Text = "💻  GitHub",
                 Size = new Size(180, 30),
                 Location = new Point(20, _sidebar.Height - 138),
                 FlatStyle = FlatStyle.Flat,
@@ -211,7 +211,7 @@ namespace Botanika_Desktop.Forms
 
             var portfolioBtn = new Button
             {
-                Text = "Portfolio",
+                Text = "🎨  Portfolio",
                 Size = new Size(180, 30),
                 Location = new Point(20, _sidebar.Height - 104),
                 FlatStyle = FlatStyle.Flat,

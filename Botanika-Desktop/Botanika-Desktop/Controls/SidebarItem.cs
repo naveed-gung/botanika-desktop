@@ -104,12 +104,12 @@ namespace Botanika_Desktop.Controls
                 ? BotanikaColors.Primary
                 : BotanikaColors.Charcoal;
 
-            _iconLabel.BackColor = BackColor;
+            _iconBox.BackColor = BackColor;
             _textLabel.BackColor = BackColor;
 
             // Active text is slightly brighter white for extra emphasis
             Color textColor = _isActive ? Color.White : Color.FromArgb(200, 255, 255, 255);
-            _iconLabel.ForeColor = textColor;
+            _iconBox.ForeColor = textColor;
             _textLabel.ForeColor = textColor;
 
             // Bold when active

@@ -179,6 +179,12 @@ namespace Botanika_Desktop.Firebase
             // outer SEQUENCE
             if (pkcs8[pos++] != 0x30) throw new Exception("Expected SEQUENCE at offset 0");
             SkipDerLength(pkcs8, ref pos);
+            
+            // version INTEGER
+            if (pkcs8[pos++] != 0x02) throw new Exception("Expected INTEGER (version)");
+            int vLen = ReadDerLength(pkcs8, ref pos);
+            pos += vLen;
+
             // AlgorithmIdentifier SEQUENCE
             if (pkcs8[pos++] != 0x30) throw new Exception("Expected SEQUENCE (AlgorithmIdentifier)");
             int algLen = ReadDerLength(pkcs8, ref pos);
