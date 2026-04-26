@@ -66,6 +66,9 @@ namespace Botanika_Desktop.Theme
             btn.FlatAppearance.BorderSize  = 0;
             btn.FlatAppearance.MouseOverBackColor  = BotanikaColors.PrimaryDark;
             btn.FlatAppearance.MouseDownBackColor  = BotanikaColors.PrimaryDark;
+            // Apply rounded corners once the button has been laid out
+            btn.HandleCreated += (s, e) => ApplyRoundedCorners(btn, 8);
+            btn.SizeChanged  += (s, e) => ApplyRoundedCorners(btn, 8);
         }
 
         // Danger / delete button — terracotta red
@@ -107,6 +110,25 @@ namespace Botanika_Desktop.Theme
             cmb.ForeColor  = BotanikaColors.Charcoal;
             cmb.FlatStyle  = FlatStyle.Flat;
             cmb.Font       = BotanikaFonts.Body(9.5f);
+        }
+
+        // Applies rounded corners to all card-like white panels in a control tree.
+        // Call after BuildUI to round every panel that looks like a card.
+        public static void RoundAllCards(Control root, int radius = 10)
+        {
+            RoundCardsRecursive(root, radius);
+        }
+
+        private static void RoundCardsRecursive(Control ctrl, int radius)
+        {
+            if (ctrl is Panel pnl && pnl.BackColor == BotanikaColors.White
+                && pnl.Width > 40 && pnl.Height > 40)
+            {
+                ApplyRoundedCorners(pnl, radius);
+                pnl.SizeChanged += (s, e) => ApplyRoundedCorners(pnl, radius);
+            }
+            foreach (Control child in ctrl.Controls)
+                RoundCardsRecursive(child, radius);
         }
 
         // Clips a control to a rounded rectangle — same effect as CSS border-radius.

@@ -27,6 +27,7 @@ namespace Botanika_Desktop.Forms
             BackColor = BotanikaColors.Offwhite;
             Dock      = DockStyle.Fill;
             BuildUI();
+            BotanikaTheme.RoundAllCards(this);
             _ = RefreshListAsync();
         }
 
@@ -129,7 +130,7 @@ namespace Botanika_Desktop.Forms
             try
             {
                 _countLabel.Text = "Loading...";
-                _allClients = await FirebaseService.Instance.GetAllAsync<Client>("clients");
+                _allClients = await FirebaseService.Instance.GetAllAsync<Client>("users");
                 ApplyFilter();
                 _countLabel.Text = $"{_allClients.Count} client(s)";
             }
@@ -185,7 +186,7 @@ namespace Botanika_Desktop.Forms
                 string id = $"client_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
                 client.Id        = id;
                 client.CreatedAt = DateTime.UtcNow;
-                await FirebaseService.Instance.SaveAsync("clients", id, client);
+                await FirebaseService.Instance.SaveAsync("users", id, client);
                 await RefreshListAsync();
                 ToastNotification.Show("Client added!");
             }
@@ -209,7 +210,7 @@ namespace Botanika_Desktop.Forms
         {
             try
             {
-                await FirebaseService.Instance.SaveAsync("clients", id, client);
+                await FirebaseService.Instance.SaveAsync("users", id, client);
                 await RefreshListAsync();
                 ToastNotification.Show("Client updated!");
             }
@@ -232,7 +233,7 @@ namespace Botanika_Desktop.Forms
         {
             try
             {
-                await FirebaseService.Instance.DeleteAsync("clients", id);
+                await FirebaseService.Instance.DeleteAsync("users", id);
                 await RefreshListAsync();
                 ToastNotification.Show("Client deleted.");
             }

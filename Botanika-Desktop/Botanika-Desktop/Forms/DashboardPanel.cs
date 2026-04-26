@@ -29,6 +29,7 @@ namespace Botanika_Desktop.Forms
             BackColor = BotanikaColors.Offwhite;
             Dock      = DockStyle.Fill;
             BuildUI();
+            BotanikaTheme.RoundAllCards(this);
 
             // Load data right away — no need to wait for a button click
             _ = LoadDashboardDataAsync();
@@ -192,7 +193,7 @@ namespace Botanika_Desktop.Forms
             {
                 // Load everything in parallel — faster than sequential awaits
                 var productsTask = FirebaseService.Instance.GetAllAsync<Product>("products");
-                var clientsTask  = FirebaseService.Instance.GetAllAsync<Client>("clients");
+                var clientsTask  = FirebaseService.Instance.GetAllAsync<Client>("users");
                 var ordersTask   = FirebaseService.Instance.GetAllAsync<Order>("orders");
 
                 await Task.WhenAll(productsTask, clientsTask, ordersTask);

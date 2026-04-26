@@ -221,7 +221,7 @@ namespace Botanika_Desktop.Forms
             try
             {
                 var pTask = FirebaseService.Instance.GetAllAsync<Product>("products");
-                var cTask = FirebaseService.Instance.GetAllAsync<Client>("clients");
+                var cTask = FirebaseService.Instance.GetAllAsync<Client>("users");
                 var oTask = FirebaseService.Instance.GetAllAsync<Order>("orders");
                 await Task.WhenAll(pTask, cTask, oTask);
                 _products = pTask.Result ?? new List<Product>();

@@ -29,6 +29,7 @@ namespace Botanika_Desktop.Forms
             BackColor = BotanikaColors.Offwhite;
             Dock      = DockStyle.Fill;
             BuildUI();
+            BotanikaTheme.RoundAllCards(this);
             _ = RefreshListAsync();
         }
 
