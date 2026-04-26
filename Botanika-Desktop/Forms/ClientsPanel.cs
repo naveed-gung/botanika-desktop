@@ -21,6 +21,7 @@ namespace Botanika_Desktop.Forms
         private Label            _countLabel;
         private List<Client>     _allClients  = new List<Client>();
         private List<Client>     _filtered    = new List<Client>();
+        private ImageList        _clientAvatars;
 
         public ClientsPanel()
         {
@@ -91,6 +92,10 @@ namespace Botanika_Desktop.Forms
                 Size     = new Size(900, 300),
                 Anchor   = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
+            
+            _clientAvatars = new ImageList { ImageSize = new Size(32, 32), ColorDepth = ColorDepth.Depth32Bit };
+            _clientAvatars.Images.Add("default", GenerateDefaultAvatar());
+            _listView.SmallImageList = _clientAvatars;
             _listView.Columns.AddRange(new[]
             {
                 new ColumnHeader { Text = "Name",        Width = 180 },
@@ -119,7 +124,8 @@ namespace Botanika_Desktop.Forms
             try
             {
                 _countLabel.Text = "Loading...";
-                _allClients = await FirebaseService.Instance.GetAllAsync<Client>("users");
+                var users = await FirebaseService.Instance.GetAllAsync<Client>("users");
+                _allClients = users.Where(c => c.Role != "admin" && c.Email != "admin@botanika.com").ToList();
                 ApplyFilter();
                 _listView.AutoFitHeight();
                 _countLabel.Text = $"{_allClients.Count} client(s)";
@@ -141,10 +147,30 @@ namespace Botanika_Desktop.Forms
                     (c.Name?.ToLowerInvariant().Contains(s) == true) ||
                     (c.Email?.ToLowerInvariant().Contains(s) == true)).ToList();
 
+            // Keep only the default avatar
+            while (_clientAvatars.Images.Count > 1) {
+                _clientAvatars.Images.RemoveAt(1);
+            }
+
             _listView.Items.Clear();
             foreach (var c in _filtered)
             {
-                var item = new ListViewItem(c.Name ?? "");
+                int imgIdx = 0; // default
+                if (!string.IsNullOrEmpty(c.ProfilePicture))
+                {
+                    try
+                    {
+                        var bytes = Convert.FromBase64String(c.ProfilePicture);
+                        using (var ms = new System.IO.MemoryStream(bytes))
+                        {
+                            _clientAvatars.Images.Add(c.Id, Image.FromStream(ms));
+                            imgIdx = _clientAvatars.Images.Count - 1;
+                        }
+                    }
+                    catch { }
+                }
+
+                var item = new ListViewItem(c.Name ?? "") { ImageIndex = imgIdx };
                 item.SubItems.Add(c.Email ?? "");
                 item.SubItems.Add(c.Phone ?? "");
                 item.SubItems.Add(c.OrderCount.ToString());
@@ -253,6 +279,26 @@ namespace Botanika_Desktop.Forms
 
         public new void Refresh() => _ = RefreshListAsync();
         public void FocusSearch()  => _searchBox.Focus();
+
+        private Image GenerateDefaultAvatar()
+        {
+            var bmp = new Bitmap(32, 32);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.Clear(Color.Transparent);
+                using (var brush = new SolidBrush(Color.FromArgb(220, 220, 225))) // light gray
+                    g.FillEllipse(brush, 0, 0, 32, 32);
+                
+                // Draw a simple person icon or letter
+                using (var textBrush = new SolidBrush(BotanikaColors.TextMuted))
+                {
+                    var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+                    g.DrawString("C", BotanikaFonts.Heading(14f, FontStyle.Bold), textBrush, new RectangleF(0, 0, 32, 32), format);
+                }
+            }
+            return bmp;
+        }
     }
 
     // ─── Client edit dialog ────────────────────────────────────────────────────

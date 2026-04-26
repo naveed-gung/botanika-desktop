@@ -77,15 +77,7 @@ namespace Botanika_Desktop.Controls
             int contentHeight = 40 + (Items.Count * 36) + 4;
             Height = System.Math.Max(minHeight, System.Math.Min(contentHeight, maxHeight));
             
-            // Also fit width to columns to prevent the gray infinite space
-            int totalW = 0;
-            foreach (ColumnHeader col in Columns) totalW += col.Width;
-            if (totalW > 0)
-            {
-                // Unhook right anchor so it can shrink
-                Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                Width = totalW + 4; 
-            }
+            // We let the container manage width (responsive)
         }
 
         // Draw the column header row — dark charcoal background with white text
@@ -133,11 +125,38 @@ namespace Botanika_Desktop.Controls
             // White text when selected, charcoal otherwise
             Color fg = e.Item.Selected ? Color.White : BotanikaColors.Charcoal;
 
+            Rectangle textBounds = Rectangle.Inflate(e.Bounds, -10, 0);
+
+            // Draw image if available for the first column
+            if (e.ColumnIndex == 0 && e.Item.ImageList != null && e.Item.ImageIndex >= 0)
+            {
+                Image img = e.Item.ImageList.Images[e.Item.ImageIndex];
+                if (img != null)
+                {
+                    // Draw a circular avatar
+                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    int size = 26;
+                    int yOffset = e.Bounds.Top + (e.Bounds.Height - size) / 2;
+                    Rectangle imgRect = new Rectangle(e.Bounds.Left + 10, yOffset, size, size);
+                    
+                    using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                    {
+                        path.AddEllipse(imgRect);
+                        e.Graphics.SetClip(path);
+                        e.Graphics.DrawImage(img, imgRect);
+                        e.Graphics.ResetClip();
+                    }
+                    
+                    textBounds.X += size + 10;
+                    textBounds.Width -= (size + 10);
+                }
+            }
+
             TextRenderer.DrawText(
                 e.Graphics,
                 e.SubItem?.Text ?? "",
                 BotanikaFonts.Body(11.5f),
-                Rectangle.Inflate(e.Bounds, -10, 0),
+                textBounds,
                 fg,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
         }

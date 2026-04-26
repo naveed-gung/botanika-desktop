@@ -89,7 +89,7 @@ namespace Botanika_Desktop.Forms
             {
                 Location  = new Point(pad, 88),
                 Size      = new Size(900, 300),
-                Anchor    = AnchorStyles.Top | AnchorStyles.Left,
+                Anchor    = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Font      = BotanikaFonts.Body(9.5f)
             };
 
@@ -203,10 +203,6 @@ namespace Botanika_Desktop.Forms
             var activeList = _tabs.SelectedIndex == 0 ? _receivedList : _toPayList;
             activeList.AutoFitHeight();
             _tabs.Height = activeList.Height + 45; // 45 for tabs header
-            if (activeList.Width > 0)
-            {
-                _tabs.Width = activeList.Width + 10;
-            }
         }
 
         private void PopulateList(BotanikaListView lv, List<Payment> payments)
