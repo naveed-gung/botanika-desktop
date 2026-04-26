@@ -16,7 +16,7 @@ namespace Botanika_Desktop.Controls
             GridLines     = false;
             View          = View.Details;
             OwnerDraw     = true;  // we draw everything ourselves
-            Font          = BotanikaFonts.Body(10.5f);
+            Font          = BotanikaFonts.Body(11.5f);
             BackColor     = BotanikaColors.White;
             BorderStyle   = BorderStyle.None;
             ShowItemToolTips = true;
@@ -25,6 +25,7 @@ namespace Botanika_Desktop.Controls
             // (WinForms SetStyle causes the text to disappear on hover)
         }
 
+        private bool _initialized;
         protected override void OnHandleCreated(System.EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -33,6 +34,18 @@ namespace Botanika_Desktop.Controls
             System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", 
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             aProp?.SetValue(this, true, null);
+            
+            if (!_initialized)
+            {
+                _initialized = true;
+                // Move down slightly
+                Top += 25;
+                // Scale columns by 30% to make the table wider and more spacious
+                foreach (ColumnHeader col in Columns)
+                {
+                    if (col.Width > 0) col.Width = (int)(col.Width * 1.35);
+                }
+            }
         }
 
         protected override void OnResize(System.EventArgs e)
@@ -56,8 +69,12 @@ namespace Botanika_Desktop.Controls
                 return;
             }
 
-            // Each row is roughly 24px, header is ~28px
-            int contentHeight = 28 + (Items.Count * 24) + 4;
+            // Set row height using a dummy image list (taller rows)
+            var dummyImageList = new ImageList { ImageSize = new Size(1, 36) };
+            SmallImageList = dummyImageList;
+            
+            // Each row is ~36px, header is ~40px
+            int contentHeight = 40 + (Items.Count * 36) + 4;
             Height = System.Math.Max(minHeight, System.Math.Min(contentHeight, maxHeight));
             
             // Also fit width to columns to prevent the gray infinite space
@@ -88,8 +105,8 @@ namespace Botanika_Desktop.Controls
             TextRenderer.DrawText(
                 e.Graphics,
                 e.Header?.Text ?? "",
-                BotanikaFonts.Body(10f, FontStyle.Bold),
-                Rectangle.Inflate(e.Bounds, -4, 0),
+                BotanikaFonts.Body(11f, FontStyle.Bold),
+                Rectangle.Inflate(e.Bounds, -10, 0),
                 Color.White,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
         }
@@ -122,8 +139,8 @@ namespace Botanika_Desktop.Controls
             TextRenderer.DrawText(
                 e.Graphics,
                 e.SubItem?.Text ?? "",
-                BotanikaFonts.Body(10.5f),
-                Rectangle.Inflate(e.Bounds, -4, 0),
+                BotanikaFonts.Body(11.5f),
+                Rectangle.Inflate(e.Bounds, -10, 0),
                 fg,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
         }
