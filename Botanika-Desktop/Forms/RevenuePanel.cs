@@ -118,7 +118,6 @@ namespace Botanika_Desktop.Forms
             Controls.AddRange(new Control[]
             {
                 header, subheader,
-                _totalRevenueLabel, _monthRevenueLabel, _avgOrderLabel, _topProductLabel,
                 chartTitle, refreshBtn, _chartArea, _statusLabel
             });
         }

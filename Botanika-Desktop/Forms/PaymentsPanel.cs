@@ -99,8 +99,8 @@ namespace Botanika_Desktop.Forms
             _tabs = new TabControl
             {
                 Location  = new Point(pad, 88),
-                Size      = new Size(900, 500),
-                Anchor    = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+                Size      = new Size(900, 300),
+                Anchor    = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Font      = BotanikaFonts.Body(9.5f)
             };
 

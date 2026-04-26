@@ -251,7 +251,6 @@ namespace Botanika_Desktop.Forms
             {
                 AutoSize = true,
                 MaximumSize = new Size(Math.Max(300, _chatArea.ClientSize.Width - 120), 0),
-                MinimumSize = new Size(200, 0),
                 BackColor = isBot ? BotanikaColors.White : BotanikaColors.Primary,
                 Padding = new Padding(14, 10, 14, 10),
                 Margin = isBot ? new Padding(0, 6, 60, 6) : new Padding(60, 6, 0, 6)
@@ -374,6 +373,9 @@ namespace Botanika_Desktop.Forms
                 };
                 return greetings[new Random().Next(greetings.Length)];
             }
+
+            if (ContainsAny(q, "nice", "cool", "great", "ok", "awesome", "wow", "good", "perfect", "amazing"))
+                return "Happy to help! What else would you like to check?";
 
             if (ContainsAny(q, "thank", "thanks", "thx", "appreciate"))
                 return "You're welcome! Is there anything else I can help with?";

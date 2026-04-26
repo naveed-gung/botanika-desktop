@@ -111,8 +111,8 @@ namespace Botanika_Desktop.Forms
             _listView = new BotanikaListView
             {
                 Location = new Point(pad, 112),
-                Size     = new Size(900, 500),
-                Anchor   = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
+                Size     = new Size(900, 300),
+                Anchor   = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
             _listView.Columns.AddRange(new[]
             {

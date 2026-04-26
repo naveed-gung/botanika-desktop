@@ -226,6 +226,7 @@ namespace Botanika_Desktop.Forms
                     _recentOrdersList.Items.Add(item);
                 }
 
+                _recentOrdersList.AutoFitHeight();
                 _lastUpdatedLabel.Text = $"Last updated: {DateTime.Now:HH:mm:ss}";
             }
             catch (Exception ex)
