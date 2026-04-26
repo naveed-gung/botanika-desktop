@@ -113,7 +113,7 @@ namespace Botanika_Desktop.Forms
             // ── Logged-in user display ─────────────────────────────────────────
             _userLabel = new Label
             {
-                Text = $"\u25B6 {Session.DisplayName}",
+                Text = Session.DisplayName,
                 Font = BotanikaFonts.Body(9f),
                 ForeColor = Color.FromArgb(180, 255, 255, 255),
                 Size = new Size(220, 32),

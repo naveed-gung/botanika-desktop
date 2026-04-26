@@ -88,13 +88,13 @@ namespace Botanika_Desktop.Controls
         private void OnHoverEnter(object sender, EventArgs e)
         {
             if (!_isActive)
-                BackColor = Color.FromArgb(60, 255, 255, 255);
+                _textLabel.ForeColor = BotanikaColors.Sand;
         }
 
         private void OnHoverLeave(object sender, EventArgs e)
         {
             if (!_isActive)
-                BackColor = BotanikaColors.Charcoal;
+                _textLabel.ForeColor = Color.FromArgb(200, 255, 255, 255);
         }
 
         // Updates colors based on active state

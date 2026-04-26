@@ -552,6 +552,80 @@ namespace Botanika_Desktop.Forms
                        "🔍 Search: Ask about any product by name!";
             }
 
+            // ── Smart Inference — catch natural language before giving up ────
+            // Superlatives: least/most/best/worst/newest/oldest
+            if (_products.Count > 0)
+            {
+                if (ContainsAny(q, "least", "lowest", "minimum", "smallest", "fewest"))
+                {
+                    if (ContainsAny(q, "stock", "inventory", "quantity", "unit"))
+                    {
+                        var min = _products.Where(p => p.Stock > 0).OrderBy(p => p.Stock).FirstOrDefault();
+                        return min != null ? $"Lowest stock: \"{min.Name}\" with only {min.Stock} units left at ${min.Price:F2}." : "All products have 0 stock.";
+                    }
+                    // Default "least" = cheapest
+                    var cheapest = _products.OrderBy(p => p.Price).First();
+                    return $"The least expensive product is \"{cheapest.Name}\" at ${cheapest.Price:F2}. Stock: {cheapest.Stock} units.";
+                }
+
+                if (ContainsAny(q, "most", "highest", "maximum", "biggest", "greatest"))
+                {
+                    if (ContainsAny(q, "stock", "inventory", "quantity", "unit"))
+                    {
+                        var max = _products.OrderByDescending(p => p.Stock).First();
+                        return $"Highest stock: \"{max.Name}\" with {max.Stock} units at ${max.Price:F2}.";
+                    }
+                    if (ContainsAny(q, "price", "expensive", "costly", "plant", "product"))
+                    {
+                        var top = _products.OrderByDescending(p => p.Price).First();
+                        return $"Most expensive: \"{top.Name}\" at ${top.Price:F2}. Stock: {top.Stock} units.";
+                    }
+                }
+
+                if (ContainsAny(q, "newest", "latest", "recent", "new"))
+                {
+                    var newest = _products.OrderByDescending(p => p.Id).FirstOrDefault();
+                    return newest != null ? $"Most recently added: \"{newest.Name}\" — ${newest.Price:F2} ({newest.Stock} in stock)" : "No products found.";
+                }
+
+                if (ContainsAny(q, "average", "avg", "mean"))
+                {
+                    if (ContainsAny(q, "price", "cost", "plant", "product"))
+                        return $"Average product price: ${_products.Average(p => p.Price):F2}";
+                    if (ContainsAny(q, "stock", "inventory"))
+                        return $"Average stock per product: {_products.Average(p => p.Stock):F0} units";
+                }
+
+                // Partial product name match (fuzzy) — catches "monstera" even without exact name
+                foreach (var p in _products)
+                {
+                    if (string.IsNullOrEmpty(p.Name)) continue;
+                    var words = p.Name.ToLowerInvariant().Split(' ');
+                    foreach (var word in words)
+                    {
+                        if (word.Length > 3 && q.Contains(word))
+                            return BuildProductInfo(p);
+                    }
+                }
+            }
+
+            // ── Conversational catch-alls ─────────────────────────────────────
+            if (ContainsAny(q, "what can", "what do", "who are", "tell me about"))
+            {
+                if (ContainsAny(q, "you", "bot")) return "I'm your Botanika assistant! I know about your products, orders, clients, and revenue. Type \"help\" to see all my capabilities!";
+                if (ContainsAny(q, "store", "shop", "botanika")) return GetInventoryOverview();
+            }
+
+            if (ContainsAny(q, "how", "why", "when", "where", "what"))
+            {
+                // Try to be helpful even if we don't understand
+                return $"I'm not sure I fully understand that question, but here's what I know:\n\n" +
+                       $"• {_products.Count} products (${_products.Sum(p => p.Price * p.Stock):F2} inventory value)\n" +
+                       $"• {_clients.Count} clients\n" +
+                       $"• {_orders.Count} orders (${_orders.Sum(o => o.Total):F2} total revenue)\n\n" +
+                       "Try rephrasing or type \"help\" for specific queries I can handle!";
+            }
+
             // ── Fallback ─────────────────────────────────────────────────────
             return "I'm not sure about that one. Try asking about inventory, revenue, clients, orders, or specific products. Type \"help\" to see everything I can do!";
         }
