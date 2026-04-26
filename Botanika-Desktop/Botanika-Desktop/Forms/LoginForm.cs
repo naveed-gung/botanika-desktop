@@ -410,10 +410,18 @@ namespace Botanika_Desktop.Forms
             }
         }
 
+        private Timer _errorTimer;
+
         private void ShowError(string message)
         {
             _errorLabel.Text = message;
             _errorLabel.Visible = true;
+
+            // Auto-dismiss after 4 seconds
+            if (_errorTimer != null) { _errorTimer.Stop(); _errorTimer.Dispose(); }
+            _errorTimer = new Timer { Interval = 4000 };
+            _errorTimer.Tick += (s, e) => { _errorTimer.Stop(); _errorTimer.Dispose(); _errorTimer = null; HideError(); };
+            _errorTimer.Start();
         }
 
         private void HideError()

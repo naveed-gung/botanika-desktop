@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using Botanika_Desktop.Forms;
 
@@ -17,6 +18,9 @@ namespace Botanika_Desktop
         [STAThread]
         static void Main()
         {
+            // Force TLS 1.2 — Google/Firebase APIs reject older protocols
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
