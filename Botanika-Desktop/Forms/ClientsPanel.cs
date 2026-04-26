@@ -162,6 +162,9 @@ namespace Botanika_Desktop.Forms
                     {
                         string b64 = c.ProfilePicture.Trim();
                         if (b64.Contains(",")) b64 = b64.Substring(b64.IndexOf(",") + 1);
+                        
+                        // Clean string of any hidden whitespace or line breaks
+                        b64 = b64.Replace(" ", "+").Replace("\n", "").Replace("\r", "");
 
                         // Fix base64 padding issues
                         int mod4 = b64.Length % 4;
@@ -174,7 +177,10 @@ namespace Botanika_Desktop.Forms
                             imgIdx = _clientAvatars.Images.Count - 1;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Botanika_Desktop.Controls.ToastNotification.ShowError($"Avatar err ({c.Name}): {ex.Message}");
+                    }
                 }
 
                 var item = new ListViewItem(c.Name ?? "") { ImageIndex = imgIdx };
