@@ -325,7 +325,6 @@ namespace Botanika_Desktop.Forms
                 AutoSizeMode = AutoSizeMode.GrowOnly,
                 WrapContents = false,
                 BackColor = Color.Transparent,
-                Dock = isBot ? DockStyle.Left : DockStyle.Right,
                 Padding = new Padding(0)
             };
 
@@ -335,6 +334,20 @@ namespace Botanika_Desktop.Forms
             flow.Controls.Add(sender);
             flow.Controls.Add(bubble);
             wrapper.Controls.Add(flow);
+            
+            // Wait for flow to compute its size to anchor it properly
+            flow.PerformLayout();
+            if (isBot)
+            {
+                flow.Location = new Point(0, 0);
+                flow.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            }
+            else
+            {
+                int wWidth = _chatArea.ClientSize.Width;
+                flow.Location = new Point(wWidth - flow.Width - 24, 0); // 24 for scrollbar padding
+                flow.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            }
 
             _chatArea.Controls.Add(wrapper);
             wrapper.BringToFront(); // panels dock top, newest at bottom by bringing to front
