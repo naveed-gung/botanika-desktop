@@ -78,6 +78,7 @@ namespace Botanika_Desktop.Controls
                     col.Width += 10;
                     
                     if (col.Width < designWidth) col.Width = designWidth; // prevent shrinking below design
+                    if (col.Width > 400) col.Width = 400; // prevent a single column from being infinitely wide
                     
                     totalW += col.Width;
                 }
@@ -85,7 +86,9 @@ namespace Botanika_Desktop.Controls
             if (totalW > 0)
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                Width = totalW + 20; 
+                // Cap the maximum width of the table so it doesn't stretch infinitely past the screen
+                int maxWidth = this.Parent != null ? this.Parent.Width - 40 : 1600;
+                Width = System.Math.Min(totalW + 20, maxWidth); 
             }
         }
 

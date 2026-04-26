@@ -160,8 +160,12 @@ namespace Botanika_Desktop.Forms
                 {
                     try
                     {
-                        string b64 = c.ProfilePicture;
+                        string b64 = c.ProfilePicture.Trim();
                         if (b64.Contains(",")) b64 = b64.Substring(b64.IndexOf(",") + 1);
+
+                        // Fix base64 padding issues
+                        int mod4 = b64.Length % 4;
+                        if (mod4 > 0) b64 += new string('=', 4 - mod4);
 
                         var bytes = Convert.FromBase64String(b64);
                         using (var ms = new System.IO.MemoryStream(bytes))
