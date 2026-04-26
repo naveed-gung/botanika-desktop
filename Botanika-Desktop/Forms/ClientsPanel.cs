@@ -178,6 +178,7 @@ namespace Botanika_Desktop.Forms
                 item.SubItems.Add(c.MemberSince);
                 item.SubItems.Add(c.Id ?? "");
                 item.Tag = c;
+                _listView.CustomImageIndices[item] = imgIdx;
                 _listView.Items.Add(item);
             }
         }

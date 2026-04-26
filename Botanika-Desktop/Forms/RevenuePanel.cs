@@ -24,6 +24,8 @@ namespace Botanika_Desktop.Forms
 
         // Monthly revenue data for the chart
         private Dictionary<string, double> _monthlyRevenue = new Dictionary<string, double>();
+        private Dictionary<string, int> _productSales = new Dictionary<string, int>();
+        private Panel _pieChartArea;
 
         public RevenuePanel()
         {
@@ -79,16 +81,32 @@ namespace Botanika_Desktop.Forms
                 AutoSize  = true
             };
 
-            // ── Custom drawn bar chart ─────────────────────────────────────────
-            // We draw the chart ourselves since DataVisualization needs an extra package
             _chartArea = new Panel
             {
                 Location  = new Point(pad, 230),
-                Size      = new Size(800, 260),
+                Size      = new Size(600, 260),
                 BackColor = BotanikaColors.White,
-                Anchor    = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                Anchor    = AnchorStyles.Top | AnchorStyles.Left
             };
             _chartArea.Paint += ChartArea_Paint;
+
+            var pieChartTitle = new Label
+            {
+                Text      = "Top Products",
+                Font      = BotanikaFonts.Heading(12f, FontStyle.Bold),
+                ForeColor = BotanikaColors.Charcoal,
+                Location  = new Point(pad + 620, 200),
+                AutoSize  = true
+            };
+
+            _pieChartArea = new Panel
+            {
+                Location  = new Point(pad + 620, 230),
+                Size      = new Size(260, 260),
+                BackColor = BotanikaColors.White,
+                Anchor    = AnchorStyles.Top | AnchorStyles.Left
+            };
+            _pieChartArea.Paint += PieChartArea_Paint;
 
             // ── Status / error label ───────────────────────────────────────────
             _statusLabel = new Label
@@ -104,7 +122,7 @@ namespace Botanika_Desktop.Forms
             {
                 Text      = "⟳ Refresh Data",
                 Size      = new Size(130, 32),
-                Location  = new Point(pad + 690, 200)
+                Location  = new Point(pad + 800, 44)
             };
             BotanikaTheme.StyleSecondaryButton(refreshBtn);
             refreshBtn.Click += async (s, e) => await LoadDataAsync();
@@ -112,7 +130,9 @@ namespace Botanika_Desktop.Forms
             Controls.AddRange(new Control[]
             {
                 header, subheader, refreshBtn,
-                chartTitle, _chartArea, _statusLabel
+                chartTitle, _chartArea, 
+                pieChartTitle, _pieChartArea,
+                _statusLabel
             });
         }
 
@@ -182,16 +202,16 @@ namespace Botanika_Desktop.Forms
                 double avgOrder = orders.Count > 0 ? total / orders.Count : 0;
 
                 // Find the best-selling product by counting order item appearances
-                var productSales = new Dictionary<string, int>();
+                _productSales.Clear();
                 foreach (var order in orders)
                     foreach (var item in order.Items ?? new List<OrderItem>())
                     {
-                        if (!productSales.ContainsKey(item.ProductName ?? ""))
-                            productSales[item.ProductName ?? ""] = 0;
-                        productSales[item.ProductName ?? ""] += item.Quantity;
+                        if (!_productSales.ContainsKey(item.ProductName ?? ""))
+                            _productSales[item.ProductName ?? ""] = 0;
+                        _productSales[item.ProductName ?? ""] += item.Quantity;
                     }
-                string topProduct = productSales.Count > 0
-                    ? productSales.OrderByDescending(kv => kv.Value).First().Key
+                string topProduct = _productSales.Count > 0
+                    ? _productSales.OrderByDescending(kv => kv.Value).First().Key
                     : "N/A";
 
                 _totalRevenueLabel.Text = $"${total:F2}";
@@ -213,11 +233,59 @@ namespace Botanika_Desktop.Forms
 
                 // Trigger a redraw of the chart area
                 _chartArea.Invalidate();
+                _pieChartArea.Invalidate();
                 _statusLabel.Text = $"Last updated: {DateTime.Now:HH:mm:ss}  ·  {orders.Count} orders total";
             }
             catch (Exception ex)
             {
                 _statusLabel.Text = $"Failed to load: {ex.Message}";
+            }
+        }
+
+        private void PieChartArea_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.Clear(BotanikaColors.White);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            if (_productSales.Count == 0)
+            {
+                TextRenderer.DrawText(g, "No data available", BotanikaFonts.Body(10f),
+                    _pieChartArea.ClientRectangle, BotanikaColors.TextMuted,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                return;
+            }
+
+            int total = _productSales.Values.Sum();
+            if (total == 0) return;
+
+            var sorted = _productSales.OrderByDescending(kv => kv.Value).Take(4).ToList();
+            var colors = new[] { BotanikaColors.Primary, BotanikaColors.PrimaryDark, BotanikaColors.Terracotta, BotanikaColors.Sand };
+
+            float startAngle = 0f;
+            Rectangle rect = new Rectangle(50, 30, 160, 160);
+
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                float sweepAngle = 360f * sorted[i].Value / total;
+                using (var brush = new SolidBrush(colors[i % colors.Length]))
+                {
+                    g.FillPie(brush, rect, startAngle, sweepAngle);
+                }
+                
+                // Legend
+                using (var brush = new SolidBrush(colors[i % colors.Length]))
+                {
+                    g.FillRectangle(brush, 20, 210 + (i * 18), 10, 10);
+                }
+                
+                string label = sorted[i].Key;
+                if (label.Length > 15) label = label.Substring(0, 15) + "...";
+                
+                TextRenderer.DrawText(g, $"{label} ({sorted[i].Value})", BotanikaFonts.Caption(8f),
+                    new Point(36, 208 + (i * 18)), BotanikaColors.Charcoal);
+
+                startAngle += sweepAngle;
             }
         }
 

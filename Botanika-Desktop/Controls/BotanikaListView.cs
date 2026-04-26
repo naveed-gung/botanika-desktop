@@ -25,6 +25,7 @@ namespace Botanika_Desktop.Controls
         }
 
         public ImageList CustomImageList { get; set; }
+        public System.Collections.Generic.Dictionary<ListViewItem, int> CustomImageIndices { get; } = new System.Collections.Generic.Dictionary<ListViewItem, int>();
 
         private bool _initialized;
         protected override void OnHandleCreated(System.EventArgs e)
@@ -64,7 +65,20 @@ namespace Botanika_Desktop.Controls
             Height = System.Math.Max(minHeight, System.Math.Min(contentHeight, maxHeight));
             
             int totalW = 0;
-            foreach (ColumnHeader col in Columns) totalW += col.Width;
+            foreach (ColumnHeader col in Columns)
+            {
+                if (col.Width > 0)
+                {
+                    int originalWidth = col.Width;
+                    col.Width = -2; // auto resize to fit header and content
+                    if (col.Width < originalWidth) col.Width = originalWidth; // prevent shrinking below design
+                    
+                    // Add a tiny bit of padding
+                    col.Width += 10;
+                    
+                    totalW += col.Width;
+                }
+            }
             if (totalW > 0)
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -120,9 +134,9 @@ namespace Botanika_Desktop.Controls
             Rectangle textBounds = Rectangle.Inflate(e.Bounds, -10, 0);
 
             // Draw image if available for the first column
-            if (e.ColumnIndex == 0 && this.CustomImageList != null && e.Item.ImageIndex >= 0 && e.Item.ImageIndex < this.CustomImageList.Images.Count)
+            if (e.ColumnIndex == 0 && this.CustomImageList != null && CustomImageIndices.TryGetValue(e.Item, out int imgIdx) && imgIdx >= 0 && imgIdx < this.CustomImageList.Images.Count)
             {
-                Image img = this.CustomImageList.Images[e.Item.ImageIndex];
+                Image img = this.CustomImageList.Images[imgIdx];
                 if (img != null)
                 {
                     // Draw a circular avatar

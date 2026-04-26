@@ -252,7 +252,7 @@ namespace Botanika_Desktop.Forms
             {
                 ("\ud83c\udf10", "https://botanika-754.netlify.app",  "Botanika Website"),
                 ("in",  "https://www.linkedin.com/in/naveed-sohail-gung-285645310/", "LinkedIn"),
-                ("</>",  "https://github.com/naveed-gung/", "GitHub"),
+                ("GH",  "https://github.com/naveed-gung/", "GitHub"),
                 ("\ud83d\udcbc",  "https://naveed-gung.dev/",          "Portfolio"),
             };
 

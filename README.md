@@ -77,12 +77,12 @@ The application acts as the operational command center for the Botanika platform
 <summary><img src="https://img.shields.io/badge/-Authentication_%26_Security-2D5A27?style=flat-square&logo=shield&logoColor=white" /></summary>
 <br/>
 
-| Feature | Description |
-|---------|-------------|
-| Firebase Auth REST | Email/password sign-in via `identitytoolkit.googleapis.com` |
-| Admin Gate | Secondary admin-email verification prevents unauthorized access |
-| Service Account JWT | PKCS#8 RSA key parsing → signed JWT → OAuth2 access token exchange |
-| Credential Isolation | API keys loaded from external files, excluded via `.gitignore` |
+| Feature              | Description                                                        |
+|----------------------|--------------------------------------------------------------------|
+| Firebase Auth REST   | Email/password sign-in via `identitytoolkit.googleapis.com`        |
+| Admin Gate           | Secondary admin-email verification prevents unauthorized access    |
+| Service Account JWT  | PKCS#8 RSA key parsing → signed JWT → OAuth2 access token exchange |
+| Credential Isolation | API keys loaded from external files, excluded via `.gitignore`     |
 
 </details>
 
@@ -90,12 +90,12 @@ The application acts as the operational command center for the Botanika platform
 <summary><img src="https://img.shields.io/badge/-Dashboard_%26_Analytics-4A7C59?style=flat-square&logo=googleanalytics&logoColor=white" /></summary>
 <br/>
 
-| Feature | Description |
-|---------|-------------|
-| KPI Stat Cards | Total Revenue, Orders, Products, and Clients at a glance |
-| Recent Orders Feed | Live-updating list of the latest transactions |
-| Revenue Panel | Dedicated revenue tracking and financial overview |
-| Auto-Refresh | Dashboard data pulled fresh from Firestore on every load |
+| Feature | Description                                                           |
+|---------|-----------------------------------------------------------------------|
+| KPI Stat Cards     | Total Revenue, Orders, Products, and Clients at a glance   |
+| Recent Orders Feed | Live-updating list of the latest transactions              |
+| Revenue Panel      | Dedicated revenue tracking and financial overview          |
+| Auto-Refresh       | Dashboard data pulled fresh from Firestore on every load   |
 
 </details>
 

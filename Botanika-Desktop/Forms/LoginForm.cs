@@ -70,6 +70,15 @@ namespace Botanika_Desktop.Forms
             // Apply rounded corners to the card (radius = 16px, matching the website cards)
             ApplyRoundedCorners(_centerCard, 16);
 
+            var _adminAvatar = new PictureBox
+            {
+                Size = new Size(48, 48),
+                Location = new Point(45, 36),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.Transparent,
+                Visible = false // hidden until loaded
+            };
+
             var _titleIcon = new PictureBox
             {
                 Image = Image.FromFile(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "plant_icon.png")),
@@ -79,7 +88,7 @@ namespace Botanika_Desktop.Forms
             };
 
             // Attempt to load admin avatar
-            _ = LoadAdminAvatarAsync(_titleIcon);
+            _ = LoadAdminAvatarAsync(_adminAvatar);
 
             _logoLabel = new Label
             {
@@ -88,7 +97,7 @@ namespace Botanika_Desktop.Forms
                 ForeColor = BotanikaColors.Primary,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Size = new Size(200, 56),
-                Location = new Point(145, 32)
+                Location = new Point(140, 32)
             };
 
             _subtitleLabel = new Label
@@ -168,7 +177,7 @@ namespace Botanika_Desktop.Forms
             // ── Assemble the card ──────────────────────────────────────────────
             _centerCard.Controls.AddRange(new Control[]
             {
-                _titleIcon, _logoLabel, _subtitleLabel, divider,
+                _adminAvatar, _titleIcon, _logoLabel, _subtitleLabel, divider,
                 _emailField, _passwordField,
                 _loginButton, _errorLabel, _versionLabel
             });
@@ -451,6 +460,7 @@ namespace Botanika_Desktop.Forms
                             var path = new System.Drawing.Drawing2D.GraphicsPath();
                             path.AddEllipse(0, 0, picBox.Width, picBox.Height);
                             picBox.Region = new Region(path);
+                            picBox.Visible = true;
                         });
                     }
                 }
