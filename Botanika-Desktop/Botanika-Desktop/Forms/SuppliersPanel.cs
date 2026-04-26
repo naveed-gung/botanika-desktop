@@ -143,13 +143,40 @@ namespace Botanika_Desktop.Forms
             {
                 _countLabel.Text = "Loading...";
                 _allSuppliers = await FirebaseService.Instance.GetAllAsync<Supplier>("suppliers");
+
+                // Seed default suppliers if collection is empty
+                if (_allSuppliers.Count == 0)
+                {
+                    await SeedDefaultSuppliersAsync();
+                    _allSuppliers = await FirebaseService.Instance.GetAllAsync<Supplier>("suppliers");
+                }
+
                 ApplyFilter();
+                _listView.AutoFitHeight();
                 _countLabel.Text = $"{_allSuppliers.Count} supplier(s)";
             }
             catch (Exception ex)
             {
                 _countLabel.Text = "Load failed";
                 ToastNotification.ShowError($"Failed to load suppliers: {ex.Message}");
+            }
+        }
+
+        private async Task SeedDefaultSuppliersAsync()
+        {
+            var seeds = new[]
+            {
+                new Supplier { Name = "Green Valley Nursery", ContactPerson = "Hassan Ali", Email = "hassan@greenvalley.com", Phone = "+961-71-234567", Category = "Plants", Country = "Lebanon", Active = true, Notes = "Reliable indoor plant supplier, 2-week delivery" },
+                new Supplier { Name = "Bloom & Root Co.", ContactPerson = "Sara Mansour", Email = "sara@bloomroot.com", Phone = "+961-76-543210", Category = "Flowers", Country = "Lebanon", Active = true, Notes = "Premium flower arrangements, seasonal availability" },
+                new Supplier { Name = "TerraHerbs International", ContactPerson = "Ahmed Khoury", Email = "ahmed@terraherbs.com", Phone = "+33-1-44556677", Category = "Herbs", Country = "France", Active = true, Notes = "Organic herb seeds, EU certified" },
+                new Supplier { Name = "Desert Succulents Ltd", ContactPerson = "Layla Nasser", Email = "layla@desertsucculents.com", Phone = "+971-50-1234567", Category = "Plants", Country = "UAE", Active = true, Notes = "Exotic succulents and cacti, heat-resistant varieties" },
+                new Supplier { Name = "Pacific Seeds Corp", ContactPerson = "James Chen", Email = "james@pacificseeds.com", Phone = "+1-415-5551234", Category = "Seeds", Country = "USA", Active = false, Notes = "Currently on hold — shipping delays" },
+            };
+            foreach (var s in seeds)
+            {
+                string id = $"sup_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}_{Array.IndexOf(seeds, s)}";
+                s.Id = id;
+                await FirebaseService.Instance.SaveAsync("suppliers", id, s);
             }
         }
 

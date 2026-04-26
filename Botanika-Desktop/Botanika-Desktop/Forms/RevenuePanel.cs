@@ -47,18 +47,27 @@ namespace Botanika_Desktop.Forms
                 AutoSize  = true
             };
 
+            var subheader = new Label
+            {
+                Text      = "Financial overview and monthly breakdown",
+                Font      = BotanikaFonts.Body(9f),
+                ForeColor = BotanikaColors.TextMuted,
+                Location  = new Point(pad, 44),
+                AutoSize  = true
+            };
+
             // ── KPI cards row ──────────────────────────────────────────────────
             _totalRevenueLabel = CreateKpiCard("Total Revenue", "$0.00",
-                BotanikaColors.Primary, new Point(pad, 60));
+                BotanikaColors.Primary, new Point(pad, 76));
 
             _monthRevenueLabel = CreateKpiCard("This Month", "$0.00",
-                BotanikaColors.PrimaryDark, new Point(pad + 200, 60));
+                BotanikaColors.PrimaryDark, new Point(pad + 200, 76));
 
             _avgOrderLabel = CreateKpiCard("Avg. Order Value", "$0.00",
-                BotanikaColors.Terracotta, new Point(pad + 400, 60));
+                BotanikaColors.Terracotta, new Point(pad + 400, 76));
 
             _topProductLabel = CreateKpiCard("Top Product", "—",
-                BotanikaColors.Charcoal, new Point(pad + 600, 60));
+                BotanikaColors.Charcoal, new Point(pad + 600, 76));
 
             // ── Chart heading ──────────────────────────────────────────────────
             var chartTitle = new Label
@@ -108,7 +117,7 @@ namespace Botanika_Desktop.Forms
 
             Controls.AddRange(new Control[]
             {
-                header,
+                header, subheader,
                 _totalRevenueLabel, _monthRevenueLabel, _avgOrderLabel, _topProductLabel,
                 chartTitle, refreshBtn, _chartArea, _statusLabel
             });
@@ -120,15 +129,15 @@ namespace Botanika_Desktop.Forms
         {
             var card = new Panel
             {
-                Size      = new Size(185, 90),
+                Size      = new Size(185, 100),
                 Location  = location,
                 BackColor = BotanikaColors.White
             };
 
-            // Left accent bar
+            // Top accent bar (horizontal, modern style)
             card.Controls.Add(new Panel
             {
-                Size      = new Size(4, 90),
+                Size      = new Size(185, 4),
                 Location  = new Point(0, 0),
                 BackColor = accentColor
             });
@@ -136,7 +145,7 @@ namespace Botanika_Desktop.Forms
             card.Controls.Add(new Label
             {
                 Text      = title,
-                Font      = BotanikaFonts.Body(8.5f),
+                Font      = BotanikaFonts.Caption(8f),
                 ForeColor = BotanikaColors.TextMuted,
                 Location  = new Point(14, 14),
                 AutoSize  = true
@@ -145,10 +154,10 @@ namespace Botanika_Desktop.Forms
             var valueLabel = new Label
             {
                 Text      = initialValue,
-                Font      = BotanikaFonts.Heading(15f, FontStyle.Bold),
+                Font      = BotanikaFonts.Heading(18f, FontStyle.Bold),
                 ForeColor = BotanikaColors.Charcoal,
-                Location  = new Point(14, 38),
-                Size      = new Size(165, 36)
+                Location  = new Point(14, 40),
+                AutoSize  = true
             };
             card.Controls.Add(valueLabel);
             Controls.Add(card);

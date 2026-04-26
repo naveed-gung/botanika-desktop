@@ -156,11 +156,38 @@ namespace Botanika_Desktop.Forms
             try
             {
                 _allPayments = await FirebaseService.Instance.GetAllAsync<Payment>("payments");
+
+                // Seed default payments if collection is empty
+                if (_allPayments.Count == 0)
+                {
+                    await SeedDefaultPaymentsAsync();
+                    _allPayments = await FirebaseService.Instance.GetAllAsync<Payment>("payments");
+                }
+
                 PopulateLists();
             }
             catch (Exception ex)
             {
                 ToastNotification.ShowError($"Failed to load payments: {ex.Message}");
+            }
+        }
+
+        private async Task SeedDefaultPaymentsAsync()
+        {
+            var seeds = new[]
+            {
+                new Payment { Direction = "received", Party = "Laila Nasser", Amount = 80.00, Status = "paid", Description = "Order BOT-SEED-1001", DueDate = DateTime.Today.AddDays(-10), PaidDate = DateTime.Today.AddDays(-8), Reference = "TXN-20260410" },
+                new Payment { Direction = "received", Party = "Omar Haddad", Amount = 129.00, Status = "paid", Description = "Order BOT-SEED-1002", DueDate = DateTime.Today.AddDays(-5), PaidDate = DateTime.Today.AddDays(-5), Reference = "TXN-20260415" },
+                new Payment { Direction = "received", Party = "Sara Khalil", Amount = 82.00, Status = "pending", Description = "Order BOT-SEED-1003", DueDate = DateTime.Today.AddDays(7), Reference = "TXN-20260420" },
+                new Payment { Direction = "topay", Party = "Green Valley Nursery", Amount = 450.00, Status = "pending", Description = "Monthly plant supply - April", DueDate = DateTime.Today.AddDays(15), Reference = "INV-GV-0042" },
+                new Payment { Direction = "topay", Party = "TerraHerbs International", Amount = 220.00, Status = "overdue", Description = "Herb seeds shipment Q1", DueDate = DateTime.Today.AddDays(-14), Reference = "INV-TH-0018" },
+                new Payment { Direction = "topay", Party = "Desert Succulents Ltd", Amount = 310.00, Status = "paid", Description = "Succulent order - March", DueDate = DateTime.Today.AddDays(-30), PaidDate = DateTime.Today.AddDays(-28), Reference = "INV-DS-0033" },
+            };
+            for (int i = 0; i < seeds.Length; i++)
+            {
+                string id = $"pay_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}_{i}";
+                seeds[i].Id = id;
+                await FirebaseService.Instance.SaveAsync("payments", id, seeds[i]);
             }
         }
 

@@ -269,6 +269,16 @@ namespace Botanika_Desktop.Forms
 
             bubble.Controls.Add(lbl);
 
+            // Apply rounded corners to the chat bubble
+            bubble.HandleCreated += (s, e) =>
+            {
+                bubble.Region = CreateRoundRegion(bubble.Width, bubble.Height, 12);
+            };
+            bubble.SizeChanged += (s, e) =>
+            {
+                bubble.Region = CreateRoundRegion(bubble.Width, bubble.Height, 12);
+            };
+
             // Sender tag
             var sender = new Label
             {
@@ -430,6 +440,19 @@ namespace Botanika_Desktop.Forms
             {
                 _lastAdminIntent = "inactive-users";
                 return GetInactiveUsersReport();
+            }
+
+            if (ContainsAny(q, "name", "email", "list client", "list customer", "who are", "their name", "their email", "show client", "show customer"))
+            {
+                if (_clients.Count == 0) return "No clients registered yet.";
+                var sb = new StringBuilder($"All {_clients.Count} clients:\n\n");
+                foreach (var c in _clients)
+                {
+                    string name = c.Name ?? "Unknown";
+                    string email = c.Email ?? "no email";
+                    sb.AppendLine($"• {name} — {email}");
+                }
+                return sb.ToString().TrimEnd();
             }
 
             if (ContainsAny(q, "client summary", "customer summary", "client", "customer", "users"))
@@ -730,6 +753,20 @@ namespace Botanika_Desktop.Forms
             foreach (var kw in keywords)
                 if (input.Contains(kw)) return true;
             return false;
+        }
+
+        // Creates a rounded rectangle region for clipping (chat bubbles)
+        private static System.Drawing.Region CreateRoundRegion(int w, int h, int r)
+        {
+            if (w <= 0 || h <= 0) return null;
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            int d = r * 2;
+            path.AddArc(0, 0, d, d, 180, 90);
+            path.AddArc(w - d, 0, d, d, 270, 90);
+            path.AddArc(w - d, h - d, d, d, 0, 90);
+            path.AddArc(0, h - d, d, d, 90, 90);
+            path.CloseFigure();
+            return new System.Drawing.Region(path);
         }
     }
 }
