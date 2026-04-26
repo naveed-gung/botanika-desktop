@@ -247,8 +247,8 @@ namespace Botanika_Desktop.Forms
 
             var months = _monthlyRevenue.Keys.ToList();
             int   barCount = months.Count;
-            float barW     = (float)chartW / barCount * 0.65f;
             float barGap   = (float)chartW / barCount;
+            float barW     = Math.Min(barGap * 0.65f, 80f);
 
             // Draw horizontal grid lines
             using (var gridPen = new Pen(Color.FromArgb(30, 0, 0, 0)))

@@ -89,7 +89,7 @@ namespace Botanika_Desktop.Forms
             {
                 Location  = new Point(pad, 88),
                 Size      = new Size(900, 300),
-                Anchor    = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+                Anchor    = AnchorStyles.Top | AnchorStyles.Left,
                 Font      = BotanikaFonts.Body(9.5f)
             };
 
@@ -97,11 +97,9 @@ namespace Botanika_Desktop.Forms
             var toPayTab    = new TabPage("🔴 To Pay");
 
             _receivedList = CreatePaymentList();
-            _receivedList.Dock = DockStyle.Fill;
             receivedTab.Controls.Add(_receivedList);
 
             _toPayList = CreatePaymentList();
-            _toPayList.Dock = DockStyle.Fill;
             toPayTab.Controls.Add(_toPayList);
 
             _tabs.TabPages.Add(receivedTab);
@@ -203,6 +201,10 @@ namespace Botanika_Desktop.Forms
             var activeList = _tabs.SelectedIndex == 0 ? _receivedList : _toPayList;
             activeList.AutoFitHeight();
             _tabs.Height = activeList.Height + 45; // 45 for tabs header
+            if (activeList.Width > 0)
+            {
+                _tabs.Width = activeList.Width + 10;
+            }
         }
 
         private void PopulateList(BotanikaListView lv, List<Payment> payments)

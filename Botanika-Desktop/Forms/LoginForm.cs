@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Botanika_Desktop.Controls;
 using Botanika_Desktop.Firebase;
+using System.Linq;
 using Botanika_Desktop.Theme;
 using Newtonsoft.Json;
 
@@ -69,7 +70,6 @@ namespace Botanika_Desktop.Forms
             // Apply rounded corners to the card (radius = 16px, matching the website cards)
             ApplyRoundedCorners(_centerCard, 16);
 
-            // No icon inside the card — it lives in the taskbar/title bar only (Program.AppIcon).
             var _titleIcon = new PictureBox
             {
                 Image = Image.FromFile(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "plant_icon.png")),
@@ -77,6 +77,9 @@ namespace Botanika_Desktop.Forms
                 Size = new Size(32, 32),
                 Location = new Point(105, 44)
             };
+
+            // Attempt to load admin avatar
+            _ = LoadAdminAvatarAsync(_titleIcon);
 
             _logoLabel = new Label
             {
@@ -428,6 +431,31 @@ namespace Botanika_Desktop.Forms
         {
             _errorLabel.Text = "";
             _errorLabel.Visible = false;
+        }
+
+        private async Task LoadAdminAvatarAsync(PictureBox picBox)
+        {
+            try
+            {
+                // To fetch without auth, read access must be open.
+                var users = await FirebaseService.Instance.GetAllAsync<Botanika_Desktop.Firebase.Models.Client>("users");
+                var admin = users.FirstOrDefault(c => c.Email == "admin@botanika.com" || c.Role == "admin");
+                if (admin != null && !string.IsNullOrEmpty(admin.ProfilePicture))
+                {
+                    var bytes = Convert.FromBase64String(admin.ProfilePicture);
+                    using (var ms = new System.IO.MemoryStream(bytes))
+                    {
+                        var img = Image.FromStream(ms);
+                        picBox.Invoke((MethodInvoker)delegate {
+                            picBox.Image = new Bitmap(img); // clone to avoid stream closed issues
+                            var path = new System.Drawing.Drawing2D.GraphicsPath();
+                            path.AddEllipse(0, 0, picBox.Width, picBox.Height);
+                            picBox.Region = new Region(path);
+                        });
+                    }
+                }
+            }
+            catch { }
         }
     }
 
