@@ -145,7 +145,7 @@ namespace Botanika_Desktop.Forms
                 ("orders", "Orders",     "Orders"),
                 ("revenue", "Revenue",    "Revenue"),
                 ("payments", "Payments",   "Payments"),
-                ("chatbot", "AI Chatbot", "Chatbot"),
+                ("chatbot", "Chatbot", "Chatbot"),
             };
 
             foreach (var (icon, text, section) in navDefs)
@@ -173,58 +173,48 @@ namespace Botanika_Desktop.Forms
             };
             _sidebar.Controls.Add(_statusDot);
 
-            // ── Bottom social links — matches the website footer order ──────────
-            // LinkedIn → GitHub → Portfolio  (same order as website)
-            var linkedInBtn = new Button
+            // ── Bottom social icons — horizontal row, icon-only ──────────────
+            var socialPanel = new FlowLayoutPanel
             {
-                Text = "🔗  LinkedIn",
-                Size = new Size(180, 30),
-                Location = new Point(20, _sidebar.Height - 172),
-                FlatStyle = FlatStyle.Flat,
+                Size = new Size(180, 38),
+                Location = new Point(20, _sidebar.Height - 115),
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left,
                 BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(160, 255, 255, 255),
-                Font = BotanikaFonts.Caption(8.5f),
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                TextAlign = ContentAlignment.MiddleLeft
+                WrapContents = false,
+                FlowDirection = FlowDirection.LeftToRight
             };
-            linkedInBtn.FlatAppearance.BorderSize = 0;
-            linkedInBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://www.linkedin.com/in/naveed-sohail-gung-285645310/");
-            _sidebar.Controls.Add(linkedInBtn);
 
-            var githubBtn = new Button
+            var socialDefs = new[]
             {
-                Text = "💻  GitHub",
-                Size = new Size(180, 30),
-                Location = new Point(20, _sidebar.Height - 138),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(160, 255, 255, 255),
-                Font = BotanikaFonts.Caption(8.5f),
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                TextAlign = ContentAlignment.MiddleLeft
+                ("\ud83c\udf10", "https://botanika-754.netlify.app",  "Botanika Website"),
+                ("in",  "https://www.linkedin.com/in/naveed-sohail-gung-285645310/", "LinkedIn"),
+                ("\u2328",  "https://github.com/naveed-gung/", "GitHub"),
+                ("\u25c6",  "https://naveed-gung.dev/",          "Portfolio"),
             };
-            githubBtn.FlatAppearance.BorderSize = 0;
-            githubBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://github.com/naveed-gung/");
-            _sidebar.Controls.Add(githubBtn);
 
-            var portfolioBtn = new Button
+            foreach (var (icon, url, tip) in socialDefs)
             {
-                Text = "🎨  Portfolio",
-                Size = new Size(180, 30),
-                Location = new Point(20, _sidebar.Height - 104),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(160, 255, 255, 255),
-                Font = BotanikaFonts.Caption(8.5f),
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-            portfolioBtn.FlatAppearance.BorderSize = 0;
-            portfolioBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://naveed-gung.dev/");
-            _sidebar.Controls.Add(portfolioBtn);
+                var btn = new Button
+                {
+                    Text = icon,
+                    Size = new Size(36, 36),
+                    Margin = new Padding(0, 0, 6, 0),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(40, 255, 255, 255),
+                    ForeColor = Color.FromArgb(200, 255, 255, 255),
+                    Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+                    Cursor = Cursors.Hand,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                btn.FlatAppearance.BorderSize = 0;
+                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 255, 255, 255);
+                var toolTip = new ToolTip();
+                toolTip.SetToolTip(btn, tip);
+                string target = url;
+                btn.Click += (s, e) => System.Diagnostics.Process.Start(target);
+                socialPanel.Controls.Add(btn);
+            }
+            _sidebar.Controls.Add(socialPanel);
 
             // ── Logout button at the very bottom ───────────────────────────────
             var logoutBtn = new Button

@@ -57,9 +57,9 @@ namespace Botanika_Desktop.Forms
             var botIcon = new Label
             {
                 Text = "🌿",
-                Font = new Font("Segoe UI Emoji", 20f),
+                Font = new Font("Segoe UI Emoji", 18f),
                 ForeColor = BotanikaColors.Primary,
-                Location = new Point(pad, 12),
+                Location = new Point(pad, 16),
                 AutoSize = true
             };
 
@@ -68,7 +68,7 @@ namespace Botanika_Desktop.Forms
                 Text = "BOTANIKA Assistant",
                 Font = BotanikaFonts.Heading(14f, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(pad + 42, 14),
+                Location = new Point(pad + 50, 14),
                 AutoSize = true
             };
 
@@ -77,7 +77,7 @@ namespace Botanika_Desktop.Forms
                 Text = "● Connecting...",
                 Font = BotanikaFonts.Caption(8.5f),
                 ForeColor = BotanikaColors.PrimaryLight,
-                Location = new Point(pad + 42, 40),
+                Location = new Point(pad + 50, 40),
                 AutoSize = true
             };
 
@@ -447,6 +447,31 @@ namespace Botanika_Desktop.Forms
                 foreach (var o in recent)
                     sb.AppendLine($"• {o.Id} — ${o.Total:F2} ({o.Status ?? "unknown"})");
                 return sb.ToString().TrimEnd();
+            }
+
+            // ── Highest Payment / Top Spender ────────────────────────────────
+            if (ContainsAny(q, "highest payment", "biggest order", "largest order", "top spender", "most spent", "highest spend"))
+            {
+                if (_orders.Count == 0) return "No orders exist yet, so I can't determine the top spender.";
+                // Find the single largest order
+                var biggest = _orders.OrderByDescending(o => o.Total).First();
+                // Find the client who has spent the most overall
+                var spendByClient = new Dictionary<string, double>();
+                foreach (var o in _orders)
+                {
+                    string key = o.CustomerName ?? o.CustomerEmail ?? "Unknown";
+                    if (!spendByClient.ContainsKey(key)) spendByClient[key] = 0;
+                    spendByClient[key] += o.Total;
+                }
+                var topSpender = spendByClient.OrderByDescending(kv => kv.Value).First();
+                return $"Biggest single order: ${biggest.Total:F2} by {biggest.CustomerName ?? "Unknown"}\n\n" +
+                       $"Top spender overall: {topSpender.Key} with ${topSpender.Value:F2} across all orders";
+            }
+
+            // ── Order count per client ───────────────────────────────────────
+            if (ContainsAny(q, "how many order", "order count", "total order"))
+            {
+                return $"There are {_orders.Count} orders in total, worth ${_orders.Sum(o => o.Total):F2}.";
             }
 
             // ── Featured ─────────────────────────────────────────────────────

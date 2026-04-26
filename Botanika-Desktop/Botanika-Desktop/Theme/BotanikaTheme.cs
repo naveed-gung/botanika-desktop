@@ -121,12 +121,24 @@ namespace Botanika_Desktop.Theme
 
         private static void RoundCardsRecursive(Control ctrl, int radius)
         {
-            if (ctrl is Panel pnl && pnl.BackColor == BotanikaColors.White
-                && pnl.Width > 40 && pnl.Height > 40)
+            // Round any solid-background panel that looks like a card
+            if (ctrl is Panel pnl && pnl.Width > 40 && pnl.Height > 40
+                && (pnl.BackColor == BotanikaColors.White
+                    || pnl.BackColor == BotanikaColors.SandLight
+                    || pnl.BackColor == BotanikaColors.Offwhite)
+                && !(pnl is FlowLayoutPanel))  // skip flow panels
             {
                 ApplyRoundedCorners(pnl, radius);
                 pnl.SizeChanged += (s, e) => ApplyRoundedCorners(pnl, radius);
             }
+
+            // Also round ListViews
+            if (ctrl is ListView lv && lv.Width > 40 && lv.Height > 40)
+            {
+                ApplyRoundedCorners(lv, radius);
+                lv.SizeChanged += (s, e) => ApplyRoundedCorners(lv, radius);
+            }
+
             foreach (Control child in ctrl.Controls)
                 RoundCardsRecursive(child, radius);
         }
