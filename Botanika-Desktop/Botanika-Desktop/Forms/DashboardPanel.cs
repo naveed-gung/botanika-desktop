@@ -133,21 +133,21 @@ namespace Botanika_Desktop.Forms
             });
         }
 
-        // Creates a single stat card — colored left border, big number, small label
+        // Creates a single stat card — colored top border, big number, label + subtitle
         private Panel CreateStatCard(string title, string initialValue,
             Color accentColor, out Label valueLabel, Point location)
         {
             var card = new Panel
             {
-                Size      = new Size(200, 100),
+                Size      = new Size(200, 110),
                 Location  = location,
                 BackColor = BotanikaColors.White
             };
 
-            // Colored accent bar on the left edge
+            // Colored accent bar on the top edge (modern horizontal style)
             var accent = new Panel
             {
-                Size      = new Size(4, 100),
+                Size      = new Size(200, 4),
                 Location  = new Point(0, 0),
                 BackColor = accentColor
             };
@@ -155,23 +155,31 @@ namespace Botanika_Desktop.Forms
             var titleLbl = new Label
             {
                 Text      = title,
-                Font      = BotanikaFonts.Body(9f),
+                Font      = BotanikaFonts.Caption(8.5f),
                 ForeColor = BotanikaColors.TextMuted,
-                Location  = new Point(16, 16),
+                Location  = new Point(18, 18),
                 AutoSize  = true
             };
 
             valueLabel = new Label
             {
                 Text      = initialValue,
-                Font      = BotanikaFonts.Heading(18f, FontStyle.Bold),
+                Font      = BotanikaFonts.Heading(22f, FontStyle.Bold),
                 ForeColor = BotanikaColors.Charcoal,
-                Location  = new Point(16, 42),
+                Location  = new Point(18, 44),
                 AutoSize  = true
             };
 
-            card.Controls.AddRange(new Control[] { accent, titleLbl, valueLabel });
-            // Apply rounded corners matching the website card style
+            var subtitleLbl = new Label
+            {
+                Text      = "from Firestore",
+                Font      = BotanikaFonts.Caption(7.5f),
+                ForeColor = Color.FromArgb(180, BotanikaColors.TextMuted),
+                Location  = new Point(18, 82),
+                AutoSize  = true
+            };
+
+            card.Controls.AddRange(new Control[] { accent, titleLbl, valueLabel, subtitleLbl });
             BotanikaTheme.ApplyRoundedCorners(card, 10);
             return card;
         }
