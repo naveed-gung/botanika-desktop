@@ -69,10 +69,10 @@ namespace Botanika_Desktop.Forms
                 Size        = new Size(200, 28),
                 Location    = new Point(pad, 90),
                 Font        = BotanikaFonts.Body(9.5f),
-                BorderStyle = BorderStyle.FixedSingle,
                 ForeColor   = BotanikaColors.TextMuted,
                 Text        = "Search orders..."
             };
+            BotanikaTheme.StyleTextBox(_searchBox);
             _searchBox.GotFocus  += (s2, e2) => { if (_searchBox.Text == "Search orders...") { _searchBox.Text = ""; _searchBox.ForeColor = BotanikaColors.Charcoal; } };
             _searchBox.LostFocus += (s2, e2) => { if (string.IsNullOrEmpty(_searchBox.Text)) { _searchBox.Text = "Search orders..."; _searchBox.ForeColor = BotanikaColors.TextMuted; } };
             _searchBox.TextChanged += (s, e) => ApplyFilter();
@@ -80,10 +80,11 @@ namespace Botanika_Desktop.Forms
             _statusFilter = new ComboBox
             {
                 Size          = new Size(140, 28),
-                Location      = new Point(pad + 210, 90),
+                Location      = new Point(pad + 230, 90),
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font          = BotanikaFonts.Body(9.5f)
             };
+            BotanikaTheme.StyleComboBox(_statusFilter);
             _statusFilter.Items.AddRange(new object[]
                 { "All Statuses", "pending", "confirmed", "shipped", "delivered", "cancelled" });
             _statusFilter.SelectedIndex = 0;

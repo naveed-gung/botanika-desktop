@@ -36,12 +36,12 @@ namespace Botanika_Desktop.Forms
             DoubleBuffered = true;
             BuildUI();
             AddBotMessage("Hello! I'm your Botanika assistant. I can help you with inventory, orders, clients, revenue, and product insights. Loading your data now...");
-            _ = LoadAllDataAsync();
+            _ = LoadAllDataAsync(true);
         }
 
         public new void Refresh()
         {
-            _ = LoadAllDataAsync();
+            _ = LoadAllDataAsync(false);
         }
 
         // ─── UI Construction ──────────────────────────────────────────────────
@@ -120,13 +120,11 @@ namespace Botanika_Desktop.Forms
 
             var inputWrapper = new Panel
             {
-                BackColor = BotanikaColors.SandLight,
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 Height = 44,
                 Padding = new Padding(16, 12, 16, 12)
             };
-            inputWrapper.HandleCreated += (s, e) => BotanikaTheme.ApplyRoundedCorners(inputWrapper, 22);
-            inputWrapper.SizeChanged += (s, e) => BotanikaTheme.ApplyRoundedCorners(inputWrapper, 22);
+            MakeSmoothRounded(inputWrapper, 22, BotanikaColors.SandLight, BotanikaColors.PrimaryLight);
 
             _inputBox = new TextBox
             {
@@ -160,14 +158,13 @@ namespace Botanika_Desktop.Forms
                 Text = "➤",
                 Font = new Font("Segoe UI", 14f, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.Primary,
                 ForeColor = Color.White,
-                Size = new Size(44, 32),
+                Size = new Size(44, 44),
                 Cursor = Cursors.Hand,
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right
             };
             _sendBtn.FlatAppearance.BorderSize = 0;
-            _sendBtn.FlatAppearance.MouseOverBackColor = BotanikaColors.PrimaryDark;
+            MakeSmoothRounded(_sendBtn, 22, BotanikaColors.Primary, BotanikaColors.PrimaryDark);
             _sendBtn.Click += (s, e) => SendMessage();
 
             // Layout bottom panel
@@ -199,8 +196,7 @@ namespace Botanika_Desktop.Forms
                 wrapper.Location = new Point(pad, y);
                 wrapper.Size = new Size(parent.ClientSize.Width - pad * 2 - 54, 44);
             }
-            _sendBtn.Location = new Point(parent.ClientSize.Width - pad - 44, y + 4);
-            BotanikaTheme.ApplyRoundedCorners(_sendBtn, 16);
+            _sendBtn.Location = new Point(parent.ClientSize.Width - pad - 44, y);
         }
 
         private void BuildQuickActions()
@@ -216,32 +212,83 @@ namespace Botanika_Desktop.Forms
             };
             foreach (var a in actions)
             {
-                var btn = new Button
+                var lbl = new Label
                 {
                     Text = a[0],
                     Tag = a[1],
-                    Font = BotanikaFonts.Caption(8f),
+                    Font = BotanikaFonts.Body(9.5f),
                     ForeColor = BotanikaColors.Charcoal,
-                    BackColor = BotanikaColors.SandLight,
-                    FlatStyle = FlatStyle.Flat,
                     AutoSize = true,
-                    Padding = new Padding(8, 2, 8, 2),
-                    Margin = new Padding(0, 0, 6, 0),
-                    Cursor = Cursors.Hand,
-                    Height = 28
+                    Padding = new Padding(12, 6, 12, 6),
+                    Margin = new Padding(0, 0, 8, 0),
+                    Cursor = Cursors.Hand
                 };
-                btn.FlatAppearance.BorderSize = 0;
-                btn.FlatAppearance.MouseOverBackColor = BotanikaColors.Sand;
-                btn.HandleCreated += (s, e) => BotanikaTheme.ApplyRoundedCorners(btn, 14);
-                btn.SizeChanged += (s, e) => BotanikaTheme.ApplyRoundedCorners(btn, 14);
-                btn.Click += (s, e) => HandleQuickAction((string)((Button)s).Tag);
-                _quickActions.Controls.Add(btn);
+                
+                MakeSmoothRounded(lbl, 16, BotanikaColors.SandLight, BotanikaColors.Sand);
+                lbl.MouseEnter += (s, e) => { MakeSmoothRounded(lbl, 16, BotanikaColors.Sand, BotanikaColors.Sand); lbl.Invalidate(); };
+                lbl.MouseLeave += (s, e) => { MakeSmoothRounded(lbl, 16, BotanikaColors.SandLight, BotanikaColors.Sand); lbl.Invalidate(); };
+                lbl.Click += (s, e) => HandleQuickAction((string)((Label)s).Tag);
+                _quickActions.Controls.Add(lbl);
             }
+        }
+
+        private Dictionary<Control, (Color bg, Color? border, int radius)> _roundedConfig = new Dictionary<Control, (Color, Color?, int)>();
+
+        private void MakeSmoothRounded(Control ctrl, int radius, Color bgColor, Color? borderColor = null)
+        {
+            if (!_roundedConfig.ContainsKey(ctrl))
+            {
+                ctrl.BackColor = Color.Transparent;
+                ctrl.Paint += SmoothPaint;
+            }
+            _roundedConfig[ctrl] = (bgColor, borderColor, radius);
+            ctrl.Invalidate();
+        }
+
+        private void SmoothPaint(object sender, PaintEventArgs e)
+        {
+            var ctrl = (Control)sender;
+            if (!_roundedConfig.TryGetValue(ctrl, out var cfg)) return;
+
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            var r = new Rectangle(0, 0, ctrl.Width - 1, ctrl.Height - 1);
+            using (var path = CreateRoundPath(r, cfg.radius))
+            using (var brush = new SolidBrush(cfg.bg))
+            {
+                e.Graphics.FillPath(brush, path);
+                if (cfg.border.HasValue)
+                {
+                    using (var pen = new Pen(cfg.border.Value, 1.5f))
+                        e.Graphics.DrawPath(pen, path);
+                }
+            }
+            
+            // If it's a label or button, draw text centered
+            if (ctrl is Label l)
+            {
+                TextRenderer.DrawText(e.Graphics, l.Text, l.Font, r, l.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            }
+            else if (ctrl is Button b)
+            {
+                TextRenderer.DrawText(e.Graphics, b.Text, b.Font, r, b.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            }
+        }
+
+        private GraphicsPath CreateRoundPath(Rectangle r, int radius)
+        {
+            var path = new GraphicsPath();
+            int d = radius * 2;
+            path.AddArc(r.X, r.Y, d, d, 180, 90);
+            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+            path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+            path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
         }
 
         // ─── Data Loading ─────────────────────────────────────────────────────
 
-        private async Task LoadAllDataAsync()
+        private async Task LoadAllDataAsync(bool showMessage = true)
         {
             try
             {
@@ -255,7 +302,10 @@ namespace Botanika_Desktop.Forms
                 _dataLoaded = true;
                 _statusLabel.Text = $"● Online · {_products.Count} products · {_clients.Count} clients · {_orders.Count} orders";
                 _statusLabel.ForeColor = BotanikaColors.Success;
-                AddBotMessage($"All systems online! I've loaded {_products.Count} products, {_clients.Count} clients, and {_orders.Count} orders.\n\nTry asking:\n• \"What's the inventory value?\"\n• \"Who are the top customers?\"\n• \"Which products are running low?\"\n• \"Show me revenue breakdown\"");
+                if (showMessage)
+                {
+                    AddBotMessage($"All systems online! I've loaded {_products.Count} products, {_clients.Count} clients, and {_orders.Count} orders.\n\nTry asking:\n• \"What's the inventory value?\"\n• \"Who are the top customers?\"\n• \"Which products are running low?\"\n• \"Show me revenue breakdown\"");
+                }
             }
             catch (Exception ex)
             {
@@ -709,6 +759,16 @@ namespace Botanika_Desktop.Forms
                        $"• {_clients.Count} clients\n" +
                        $"• {_orders.Count} orders (${_orders.Sum(o => o.Total):F2} total revenue)\n\n" +
                        "Try rephrasing or type \"help\" for specific queries I can handle!";
+            }
+
+            if (ContainsAny(q, "supplier", "vendor", "buy from", "where do we get"))
+            {
+                return "For information on our suppliers and vendors, please check the 'Suppliers' tab on the left! It has all contact info and categories.";
+            }
+            
+            if (ContainsAny(q, "payment", "invoice", "owe", "due", "paid", "receive"))
+            {
+                return "If you're looking for payment statuses, invoices, or what is owed/received, check out the 'Payments' tab! It manages all your transactions.";
             }
 
             // ── Fallback ─────────────────────────────────────────────────────

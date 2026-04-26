@@ -58,10 +58,10 @@ namespace Botanika_Desktop.Forms
                 Size        = new Size(220, 28),
                 Location    = new Point(pad, 72),
                 Font        = BotanikaFonts.Body(9.5f),
-                BorderStyle = BorderStyle.FixedSingle,
                 ForeColor   = BotanikaColors.TextMuted,
                 Text        = "Search clients..."
             };
+            BotanikaTheme.StyleTextBox(_searchBox);
             _searchBox.GotFocus  += (s, e) => { if (_searchBox.Text == "Search clients...") { _searchBox.Text = ""; _searchBox.ForeColor = BotanikaColors.Charcoal; } };
             _searchBox.LostFocus += (s, e) => { if (string.IsNullOrEmpty(_searchBox.Text)) { _searchBox.Text = "Search clients..."; _searchBox.ForeColor = BotanikaColors.TextMuted; } };
             _searchBox.TextChanged += (s, e) => ApplyFilter();

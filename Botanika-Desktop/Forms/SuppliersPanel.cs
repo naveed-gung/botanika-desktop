@@ -59,10 +59,10 @@ namespace Botanika_Desktop.Forms
                 Size        = new Size(200, 28),
                 Location    = new Point(pad, 72),
                 Font        = BotanikaFonts.Body(9.5f),
-                BorderStyle = BorderStyle.FixedSingle,
                 ForeColor   = BotanikaColors.TextMuted,
                 Text        = "Search suppliers..."
             };
+            BotanikaTheme.StyleTextBox(_searchBox);
             _searchBox.GotFocus  += (s2, e2) => { if (_searchBox.Text == "Search suppliers...") { _searchBox.Text = ""; _searchBox.ForeColor = BotanikaColors.Charcoal; } };
             _searchBox.LostFocus += (s2, e2) => { if (string.IsNullOrEmpty(_searchBox.Text)) { _searchBox.Text = "Search suppliers..."; _searchBox.ForeColor = BotanikaColors.TextMuted; } };
             _searchBox.TextChanged += (s, e) => ApplyFilter();
@@ -70,10 +70,11 @@ namespace Botanika_Desktop.Forms
             _categoryFilter = new ComboBox
             {
                 Size          = new Size(150, 28),
-                Location      = new Point(pad + 210, 72),
+                Location      = new Point(pad + 230, 72),
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font          = BotanikaFonts.Body(9.5f)
             };
+            BotanikaTheme.StyleComboBox(_categoryFilter);
             _categoryFilter.Items.AddRange(new object[]
                 { "All Categories", "Plants", "Flowers", "Herbs", "Seeds", "Mixed" });
             _categoryFilter.SelectedIndex = 0;
