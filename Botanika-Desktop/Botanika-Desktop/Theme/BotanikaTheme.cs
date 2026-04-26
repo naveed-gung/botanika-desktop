@@ -108,5 +108,25 @@ namespace Botanika_Desktop.Theme
             cmb.FlatStyle  = FlatStyle.Flat;
             cmb.Font       = BotanikaFonts.Body(9.5f);
         }
+
+        // Clips a control to a rounded rectangle — same effect as CSS border-radius.
+        // Call this on any Panel/GroupBox/card to get website-style rounded corners.
+        public static void ApplyRoundedCorners(Control ctrl, int radius = 12)
+        {
+            if (ctrl == null || ctrl.Width <= 0 || ctrl.Height <= 0) return;
+
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            int d = radius * 2;
+            int w = ctrl.Width;
+            int h = ctrl.Height;
+
+            path.AddArc(0,     0,     d, d, 180, 90);
+            path.AddArc(w - d, 0,     d, d, 270, 90);
+            path.AddArc(w - d, h - d, d, d,   0, 90);
+            path.AddArc(0,     h - d, d, d,  90, 90);
+            path.CloseAllFigures();
+
+            ctrl.Region = new System.Drawing.Region(path);
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace Botanika_Desktop.Forms
             _chatHistory = new RichTextBox
             {
                 Location   = new Point(pad, 76),
-                Size       = new Size(ClientSize.Width - pad * 2, ClientSize.Height - 160),
+                Size       = new Size(800, 400), // Safe default, anchor will resize
                 Anchor     = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
                 BackColor  = BotanikaColors.White,
                 ForeColor  = BotanikaColors.Charcoal,
@@ -138,19 +138,21 @@ namespace Botanika_Desktop.Forms
         // Positions the input box, send button, and status label at the bottom
         private void LayoutBottomBar()
         {
+            if (ClientSize.Width <= 0 || ClientSize.Height <= 0) return;
+
             int pad    = 24;
             int bottom = ClientSize.Height - pad;
 
             _statusLabel.Location = new Point(pad, bottom - 16);
-            _inputBox.Size        = new Size(ClientSize.Width - pad * 2 - 90, 32);
+            _inputBox.Size        = new Size(Math.Max(100, ClientSize.Width - pad * 2 - 90), 32);
             _inputBox.Location    = new Point(pad, bottom - 52);
             _sendBtn.Size         = new Size(80, 32);
-            _sendBtn.Location     = new Point(ClientSize.Width - pad - 80, bottom - 52);
+            _sendBtn.Location     = new Point(Math.Max(100, ClientSize.Width - pad - 80), bottom - 52);
 
             if (_chatHistory != null)
                 _chatHistory.Size = new Size(
-                    ClientSize.Width - pad * 2,
-                    ClientSize.Height - 160);
+                    Math.Max(100, ClientSize.Width - pad * 2),
+                    Math.Max(100, ClientSize.Height - 160));
         }
 
         // ─── Product Loading ───────────────────────────────────────────────────

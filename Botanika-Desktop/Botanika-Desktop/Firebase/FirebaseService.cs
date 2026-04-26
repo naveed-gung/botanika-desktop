@@ -84,6 +84,9 @@ namespace Botanika_Desktop.Firebase
 
         public bool IsAuthenticated => !string.IsNullOrEmpty(_serviceToken) || !string.IsNullOrEmpty(_idToken);
 
+        // The client_email from the service account — used as a trusted admin identity fallback
+        public string AdminEmail => _adminConfig?.ClientEmail ?? string.Empty;
+
         // Legacy accessor kept for LoginForm compatibility
         public string ApiKey => _webApiKey ?? string.Empty;
 
@@ -299,7 +302,7 @@ namespace Botanika_Desktop.Firebase
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"GetAllAsync<{typeof(T).Name}> failed: {ex.Message}");
+                System.IO.File.AppendAllText("firebase_error.txt", $"GetAllAsync<{typeof(T).Name}> failed: {ex.ToString()}\n");
                 return new List<T>();
             }
         }

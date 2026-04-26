@@ -9,7 +9,7 @@ namespace Botanika_Desktop.Controls
     // Shows an emoji icon, a label, and highlights when active or hovered.
     public class SidebarItem : Panel
     {
-        private Label _iconLabel;
+        private PictureBox _iconBox;
         private Label _textLabel;
         private bool  _isActive;
 
@@ -43,12 +43,12 @@ namespace Botanika_Desktop.Controls
             string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", icon + ".png");
             if (!System.IO.File.Exists(iconPath)) iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Assets", icon + ".png");
 
-            _iconLabel = new Label
+            _iconBox = new PictureBox
             {
                 Image = System.IO.File.Exists(iconPath) ? Image.FromFile(iconPath) : null,
-                ImageAlign = ContentAlignment.MiddleCenter,
-                Size      = new Size(44, 44),
-                Location  = new Point(0, 0)
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Size      = new Size(24, 24),
+                Location  = new Point(16, 10)
             };
 
             // Section name text
@@ -57,25 +57,25 @@ namespace Botanika_Desktop.Controls
                 Text      = text,
                 Font      = BotanikaFonts.Body(10f),
                 ForeColor = Color.White,
-                Size      = new Size(176, 44),
-                Location  = new Point(44, 0),
+                Size      = new Size(160, 44),
+                Location  = new Point(56, 0),
                 TextAlign = ContentAlignment.MiddleLeft
             };
 
-            Controls.Add(_iconLabel);
+            Controls.Add(_iconBox);
             Controls.Add(_textLabel);
 
             UpdateStyle();
 
             // Wire up click events on all children so anywhere you click fires Navigate
             Click         += OnItemClicked;
-            _iconLabel.Click += OnItemClicked;
+            _iconBox.Click += OnItemClicked;
             _textLabel.Click += OnItemClicked;
 
             MouseEnter         += OnHoverEnter;
             MouseLeave         += OnHoverLeave;
-            _iconLabel.MouseEnter += OnHoverEnter;
-            _iconLabel.MouseLeave += OnHoverLeave;
+            _iconBox.MouseEnter += OnHoverEnter;
+            _iconBox.MouseLeave += OnHoverLeave;
             _textLabel.MouseEnter += OnHoverEnter;
             _textLabel.MouseLeave += OnHoverLeave;
         }

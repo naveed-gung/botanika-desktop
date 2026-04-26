@@ -83,7 +83,7 @@ namespace Botanika_Desktop.Forms
             _recentOrdersList = new Controls.BotanikaListView
             {
                 Location = new Point(padding, 270),
-                Size     = new Size(ClientSize.Width - padding * 2, 300),
+                Size     = new Size(800, 300),  // Anchor stretches it to fit
                 Anchor   = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
@@ -171,6 +171,8 @@ namespace Botanika_Desktop.Forms
             };
 
             card.Controls.AddRange(new Control[] { accent, titleLbl, valueLabel });
+            // Apply rounded corners matching the website card style
+            BotanikaTheme.ApplyRoundedCorners(card, 10);
             return card;
         }
 

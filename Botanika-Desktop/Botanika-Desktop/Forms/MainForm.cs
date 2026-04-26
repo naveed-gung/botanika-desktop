@@ -43,8 +43,10 @@ namespace Botanika_Desktop.Forms
             Size = new Size(1280, 800);
             MinimumSize = new Size(1000, 640);
             BackColor = BotanikaColors.Offwhite;
-
             StartPosition = FormStartPosition.CenterScreen;
+
+            // Set the custom Botanika icon — replaces the generic VS icon in taskbar + titlebar
+            if (Program.AppIcon != null) this.Icon = Program.AppIcon;
 
             // ── Sidebar ────────────────────────────────────────────────────────
             _sidebar = new Panel
@@ -111,7 +113,7 @@ namespace Botanika_Desktop.Forms
             // ── Logged-in user display ─────────────────────────────────────────
             _userLabel = new Label
             {
-                Text = $"👤 {Session.DisplayName}",
+                Text = $"\u25B6 {Session.DisplayName}",
                 Font = BotanikaFonts.Body(9f),
                 ForeColor = Color.FromArgb(180, 255, 255, 255),
                 Size = new Size(220, 32),
@@ -171,37 +173,58 @@ namespace Botanika_Desktop.Forms
             };
             _sidebar.Controls.Add(_statusDot);
 
-            var siteBtn = new Button
+            // ── Bottom social links — matches the website footer order ──────────
+            // LinkedIn → GitHub → Portfolio  (same order as website)
+            var linkedInBtn = new Button
             {
-                Text = "🌿 Botanika Site",
-                Size = new Size(180, 32),
-                Location = new Point(20, _sidebar.Height - 136),
+                Text = "LinkedIn",
+                Size = new Size(180, 30),
+                Location = new Point(20, _sidebar.Height - 172),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
-                ForeColor = Color.White,
+                ForeColor = Color.FromArgb(160, 255, 255, 255),
                 Font = BotanikaFonts.Caption(8.5f),
                 Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                TextAlign = ContentAlignment.MiddleLeft
             };
-            siteBtn.FlatAppearance.BorderSize = 0;
-            siteBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://botanika-754.netlify.app/");
-            _sidebar.Controls.Add(siteBtn);
+            linkedInBtn.FlatAppearance.BorderSize = 0;
+            linkedInBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://www.linkedin.com/in/naveed-sohail-gung-285645310/");
+            _sidebar.Controls.Add(linkedInBtn);
 
             var githubBtn = new Button
             {
-                Text = "🐙 GitHub",
-                Size = new Size(180, 32),
-                Location = new Point(20, _sidebar.Height - 100),
+                Text = "GitHub",
+                Size = new Size(180, 30),
+                Location = new Point(20, _sidebar.Height - 138),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
-                ForeColor = Color.White,
+                ForeColor = Color.FromArgb(160, 255, 255, 255),
                 Font = BotanikaFonts.Caption(8.5f),
                 Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                TextAlign = ContentAlignment.MiddleLeft
             };
             githubBtn.FlatAppearance.BorderSize = 0;
-            githubBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://github.com/naveed-gung");
+            githubBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://github.com/naveed-gung/");
             _sidebar.Controls.Add(githubBtn);
+
+            var portfolioBtn = new Button
+            {
+                Text = "Portfolio",
+                Size = new Size(180, 30),
+                Location = new Point(20, _sidebar.Height - 104),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = Color.FromArgb(160, 255, 255, 255),
+                Font = BotanikaFonts.Caption(8.5f),
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            portfolioBtn.FlatAppearance.BorderSize = 0;
+            portfolioBtn.Click += (s, e) => System.Diagnostics.Process.Start("https://naveed-gung.dev/");
+            _sidebar.Controls.Add(portfolioBtn);
 
             // ── Logout button at the very bottom ───────────────────────────────
             var logoutBtn = new Button
@@ -331,12 +354,12 @@ namespace Botanika_Desktop.Forms
 
             if (confirm != DialogResult.Yes) return;
 
-            // Clear the session and go back to the login form
+            // Clear the session
             FirebaseService.Instance.SignOut();
             Session.Clear();
 
-            var loginForm = new LoginForm();
-            loginForm.Show();
+            // Signal the hidden LoginForm to show itself again
+            this.DialogResult = DialogResult.Retry;
             this.Close();
         }
     }
@@ -344,7 +367,7 @@ namespace Botanika_Desktop.Forms
     // ─── Panel capability interfaces ───────────────────────────────────────────
     // These let the MainForm call panel-specific actions without knowing their exact type.
 
-    public interface IRefreshable { new void Refresh(); }
+    public interface IRefreshable { void Refresh(); }
     public interface ICrudPanel { void AddNew(); void EditSelected(); void DeleteSelected(); }
     public interface ISearchable { void FocusSearch(); }
     public interface IExportable { void ExportData(); }
