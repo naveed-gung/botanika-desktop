@@ -114,13 +114,10 @@ namespace Botanika_Desktop.Controls
         // Draw the main item (first sub-item) — controls background color
         protected override void OnDrawItem(DrawListViewItemEventArgs e)
         {
-            // Selected row gets the primary green, otherwise alternate between white and sand
-            Color bg = e.Item.Selected
-                ? BotanikaColors.Primary
-                : (e.ItemIndex % 2 == 0 ? BotanikaColors.White : BotanikaColors.SandLight);
-
-            using (var brush = new SolidBrush(bg))
-                e.Graphics.FillRectangle(brush, e.Bounds);
+            // Do NOT fill the background here. Filling it here causes two bugs:
+            // 1. Hovering triggers a native item redraw that paints over all subitems (erasing text).
+            // 2. The item bounds extend past the last column, causing ugly extending row backgrounds.
+            // All background painting is now handled purely in OnDrawSubItem.
         }
 
         // Draw each cell's text content

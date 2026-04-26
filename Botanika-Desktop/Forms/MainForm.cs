@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Botanika_Desktop.Controls;
 using Botanika_Desktop.Firebase;
@@ -17,6 +18,7 @@ namespace Botanika_Desktop.Forms
         private Panel _sidebar;
         private Panel _contentPanel;
         private Label _userLabel;
+        private PictureBox _userAvatar;
         private Label _statusDot;
 
         // All sidebar navigation items — we keep references so we can set IsActive
@@ -38,6 +40,32 @@ namespace Botanika_Desktop.Forms
 
             // Check for low-stock products shortly after load
             this.Shown += async (s, e) => await CheckLowStockAsync();
+            
+            _ = LoadProfilePictureAsync();
+        }
+
+        private async Task LoadProfilePictureAsync()
+        {
+            if (string.IsNullOrEmpty(Session.UserId)) return;
+            try
+            {
+                var adminUser = await FirebaseService.Instance.GetByIdAsync<Client>("users", Session.UserId);
+                if (adminUser != null && !string.IsNullOrEmpty(adminUser.ProfilePicture))
+                {
+                    try {
+                        var bytes = Convert.FromBase64String(adminUser.ProfilePicture);
+                        using (var ms = new System.IO.MemoryStream(bytes))
+                        {
+                            _userAvatar.Image = Image.FromStream(ms);
+                        }
+                    } catch { }
+                }
+                else
+                {
+                    _userAvatar.Image = null;
+                }
+            }
+            catch { }
         }
 
         private void InitializeComponent()
@@ -114,30 +142,51 @@ namespace Botanika_Desktop.Forms
             yPos = 80;
 
             // ── Logged-in user display ─────────────────────────────────────────
+            _userAvatar = new PictureBox
+            {
+                Size = new Size(32, 32),
+                Location = new Point(16, yPos),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.FromArgb(40, 255, 255, 255), // subtle placeholder bg
+                Cursor = Cursors.Hand
+            };
+            
+            _userAvatar.Paint += (s, e) => {
+                System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+                path.AddEllipse(0, 0, _userAvatar.Width, _userAvatar.Height);
+                _userAvatar.Region = new Region(path);
+            };
+
             _userLabel = new Label
             {
                 Text = Session.DisplayName,
                 Font = BotanikaFonts.Body(9f),
                 ForeColor = Color.FromArgb(180, 255, 255, 255),
-                Size = new Size(220, 32),
-                Location = new Point(0, yPos),
+                Size = new Size(160, 32),
+                Location = new Point(56, yPos),
                 TextAlign = ContentAlignment.MiddleLeft,
-                Padding = new Padding(16, 0, 0, 0),
+                Padding = new Padding(0),
                 Cursor = Cursors.Hand
             };
             
             var profileTip = new ToolTip();
             profileTip.SetToolTip(_userLabel, "Edit Profile");
+            profileTip.SetToolTip(_userAvatar, "Edit Profile");
             
-            _userLabel.Click += (s, e) => {
+            EventHandler openProfile = (s, e) => {
                 var dlg = new ProfileDialog();
                 if (dlg.ShowDialog() == DialogResult.OK) {
                     _userLabel.Text = Session.DisplayName;
+                    _ = LoadProfilePictureAsync();
                 }
             };
             
+            _userAvatar.Click += openProfile;
+            _userLabel.Click += openProfile;
+            
+            _sidebar.Controls.Add(_userAvatar);
             _sidebar.Controls.Add(_userLabel);
-            yPos += 32;
+            yPos += 48; // spacing before separator
 
             // ── Thin separator ─────────────────────────────────────────────────
             var sep = new Panel
