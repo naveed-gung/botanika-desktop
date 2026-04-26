@@ -32,7 +32,7 @@
 
 <br/>
 
-## 🌱 About
+## <img src="https://img.shields.io/badge/-%F0%9F%8C%B1-2D5A27?style=flat-square" /> About
 
 **Botanika Desktop** is a full-featured Windows admin panel built from the ground up in **C# WinForms**. It was developed as an extended implementation of a basic CRUD assignment, evolving far beyond the original requirements into a polished, production-grade **administrative CRM system**.
 
@@ -44,22 +44,22 @@ The application acts as the operational command center for the Botanika platform
 <table>
 <tr>
 <td align="center" width="200">
-<img src="https://img.icons8.com/fluency/96/lock.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" width="40"/><br/>
 <b>Secure Auth</b><br/>
 <sub>Firebase Auth + Admin gate</sub>
 </td>
 <td align="center" width="200">
-<img src="https://img.icons8.com/fluency/96/dashboard-layout.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg" width="40"/><br/>
 <b>Live Dashboard</b><br/>
 <sub>Real-time KPI metrics</sub>
 </td>
 <td align="center" width="200">
-<img src="https://img.icons8.com/fluency/96/database.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" width="40"/><br/>
 <b>Firestore CRUD</b><br/>
 <sub>Full entity management</sub>
 </td>
 <td align="center" width="200">
-<img src="https://img.icons8.com/fluency/96/export-csv.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/filezilla/filezilla-plain.svg" width="40"/><br/>
 <b>Import / Export</b><br/>
 <sub>CSV & Markdown</sub>
 </td>
@@ -71,10 +71,10 @@ The application acts as the operational command center for the Botanika platform
 
 ---
 
-## ✨ Features
+## <img src="https://img.shields.io/badge/-%E2%9C%A8-4A7C59?style=flat-square" /> Features
 
 <details>
-<summary><b>🔐 Authentication & Security</b></summary>
+<summary><img src="https://img.shields.io/badge/-Authentication_%26_Security-2D5A27?style=flat-square&logo=shield&logoColor=white" /></summary>
 <br/>
 
 | Feature | Description |
@@ -87,7 +87,7 @@ The application acts as the operational command center for the Botanika platform
 </details>
 
 <details>
-<summary><b>📊 Dashboard & Analytics</b></summary>
+<summary><img src="https://img.shields.io/badge/-Dashboard_%26_Analytics-4A7C59?style=flat-square&logo=googleanalytics&logoColor=white" /></summary>
 <br/>
 
 | Feature | Description |
@@ -100,7 +100,7 @@ The application acts as the operational command center for the Botanika platform
 </details>
 
 <details>
-<summary><b>📦 Full CRUD Management</b></summary>
+<summary><img src="https://img.shields.io/badge/-Full_CRUD_Management-8FBC8F?style=flat-square&logo=databricks&logoColor=white" /></summary>
 <br/>
 
 | Module | Capabilities |
@@ -114,7 +114,7 @@ The application acts as the operational command center for the Botanika platform
 </details>
 
 <details>
-<summary><b>🎨 Custom UI System</b></summary>
+<summary><img src="https://img.shields.io/badge/-Custom_UI_System-68217A?style=flat-square&logo=materialdesign&logoColor=white" /></summary>
 <br/>
 
 | Component | Purpose |
@@ -130,7 +130,7 @@ The application acts as the operational command center for the Botanika platform
 </details>
 
 <details>
-<summary><b>💬 Chatbot Panel</b></summary>
+<summary><img src="https://img.shields.io/badge/-Chatbot_Panel-FF6F00?style=flat-square&logo=chatbot&logoColor=white" /></summary>
 <br/>
 
 An integrated conversational interface for quick admin operations and help — accessible directly from the sidebar.
@@ -138,7 +138,7 @@ An integrated conversational interface for quick admin operations and help — a
 </details>
 
 <details>
-<summary><b>📤 Data Import / Export</b></summary>
+<summary><img src="https://img.shields.io/badge/-Data_Import_%2F_Export-0078D6?style=flat-square&logo=microsoftexcel&logoColor=white" /></summary>
 <br/>
 
 | Format | Direction |
@@ -151,7 +151,7 @@ An integrated conversational interface for quick admin operations and help — a
 
 ---
 
-## 🏗️ Architecture
+## <img src="https://img.shields.io/badge/-%F0%9F%8F%97%EF%B8%8F-2D5A27?style=flat-square" /> Architecture
 
 ```
 Botanika-Desktop/
@@ -201,33 +201,33 @@ Botanika-Desktop/
 
 ---
 
-## 🔧 Tech Stack
+## <img src="https://img.shields.io/badge/-%F0%9F%94%A7-4A7C59?style=flat-square" /> Tech Stack
 
 <div align="center">
 <table>
 <tr>
 <td align="center" width="140">
-<img src="https://img.icons8.com/color/64/c-sharp-logo-2.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" width="48"/><br/>
 <b>C#</b><br/>
 <sub>Primary Language</sub>
 </td>
 <td align="center" width="140">
-<img src="https://img.icons8.com/color/64/net-framework.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" width="48"/><br/>
 <b>.NET 4.7.2</b><br/>
 <sub>Framework</sub>
 </td>
 <td align="center" width="140">
-<img src="https://img.icons8.com/color/64/firebase.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" width="48"/><br/>
 <b>Firebase</b><br/>
 <sub>Auth & Firestore</sub>
 </td>
 <td align="center" width="140">
-<img src="https://img.icons8.com/color/64/json--v1.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/json/json-original.svg" width="48"/><br/>
 <b>Newtonsoft</b><br/>
 <sub>JSON Serialization</sub>
 </td>
 <td align="center" width="140">
-<img src="https://img.icons8.com/color/64/windows-10.png" width="48"/><br/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-plain.svg" width="48"/><br/>
 <b>WinForms</b><br/>
 <sub>Desktop UI</sub>
 </td>
@@ -237,7 +237,7 @@ Botanika-Desktop/
 
 ---
 
-## 🚀 Getting Started
+## <img src="https://img.shields.io/badge/-%F0%9F%9A%80-2D5A27?style=flat-square" /> Getting Started
 
 ### Prerequisites
 
@@ -287,22 +287,22 @@ Then press **F5** in Visual Studio to build and run.
 
 ---
 
-## 🔒 Security
+## <img src="https://img.shields.io/badge/-%F0%9F%94%92-4A7C59?style=flat-square" /> Security
 
 <div align="center">
 
 | Layer | Protection |
 |:------|:-----------|
-| 🔑 **Credentials** | `serviceAccount.json` and `firebase_api_key.txt` are in `.gitignore` — never tracked by Git |
-| 🔐 **Authentication** | Firebase Auth REST API validates admin credentials server-side |
-| 🛡️ **Authorization** | Secondary admin-email gate ensures only authorized users access the CRM |
-| 🔏 **Token Management** | Service account JWTs are minted locally with 1-hour expiry and auto-refreshed |
+| **Credentials** | `serviceAccount.json` and `firebase_api_key.txt` are in `.gitignore` — never tracked by Git |
+| **Authentication** | Firebase Auth REST API validates admin credentials server-side |
+| **Authorization** | Secondary admin-email gate ensures only authorized users access the CRM |
+| **Token Management** | Service account JWTs are minted locally with 1-hour expiry and auto-refreshed |
 
 </div>
 
 ---
 
-## 🌐 Related Project
+## <img src="https://img.shields.io/badge/-%F0%9F%8C%90-8FBC8F?style=flat-square" /> Related Project
 
 <div align="center">
 
@@ -317,7 +317,7 @@ Then press **F5** in Visual Studio to build and run.
 
 ---
 
-## 📄 License
+## <img src="https://img.shields.io/badge/-%F0%9F%93%84-2D5A27?style=flat-square" /> License
 
 This project was developed for **educational and portfolio purposes**.
 
