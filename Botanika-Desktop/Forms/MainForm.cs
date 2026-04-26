@@ -119,8 +119,20 @@ namespace Botanika_Desktop.Forms
                 Size = new Size(220, 32),
                 Location = new Point(0, yPos),
                 TextAlign = ContentAlignment.MiddleLeft,
-                Padding = new Padding(16, 0, 0, 0)
+                Padding = new Padding(16, 0, 0, 0),
+                Cursor = Cursors.Hand
             };
+            
+            var profileTip = new ToolTip();
+            profileTip.SetToolTip(_userLabel, "Edit Profile");
+            
+            _userLabel.Click += (s, e) => {
+                var dlg = new ProfileDialog();
+                if (dlg.ShowDialog() == DialogResult.OK) {
+                    _userLabel.Text = Session.DisplayName;
+                }
+            };
+            
             _sidebar.Controls.Add(_userLabel);
             yPos += 32;
 

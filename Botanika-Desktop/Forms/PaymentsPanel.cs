@@ -106,6 +106,8 @@ namespace Botanika_Desktop.Forms
 
             _tabs.TabPages.Add(receivedTab);
             _tabs.TabPages.Add(toPayTab);
+            
+            _tabs.SelectedIndexChanged += (s, e) => AutoFitTabs();
 
             Controls.AddRange(new Control[]
             {
@@ -193,6 +195,14 @@ namespace Botanika_Desktop.Forms
 
             PopulateList(_receivedList, received);
             PopulateList(_toPayList, toPay);
+            AutoFitTabs();
+        }
+
+        private void AutoFitTabs()
+        {
+            var activeList = _tabs.SelectedIndex == 0 ? _receivedList : _toPayList;
+            activeList.AutoFitHeight();
+            _tabs.Height = activeList.Height + 40; // 40 for tabs header
         }
 
         private void PopulateList(BotanikaListView lv, List<Payment> payments)

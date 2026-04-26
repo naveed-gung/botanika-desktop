@@ -101,6 +101,9 @@
     <Compile Include="Forms\ProductEditDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\ProfileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ProductsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

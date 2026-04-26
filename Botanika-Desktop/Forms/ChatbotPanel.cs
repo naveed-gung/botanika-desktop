@@ -311,8 +311,6 @@ namespace Botanika_Desktop.Forms
             // Wrap in a container to control alignment
             var wrapper = new Panel
             {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowOnly,
                 Dock = DockStyle.Top,
                 Padding = new Padding(0, 0, 0, 8),
                 BackColor = Color.Transparent
@@ -335,22 +333,26 @@ namespace Botanika_Desktop.Forms
             flow.Controls.Add(bubble);
             wrapper.Controls.Add(flow);
             
-            // Wait for flow to compute its size to anchor it properly
+            // Wait for flow to compute its size to set wrapper height
             flow.PerformLayout();
+            wrapper.Height = flow.PreferredSize.Height + wrapper.Padding.Bottom;
+            
             if (isBot)
             {
-                flow.Location = new Point(0, 0);
-                flow.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                flow.Dock = DockStyle.Left;
             }
             else
             {
-                int wWidth = _chatArea.ClientSize.Width;
-                flow.Location = new Point(wWidth - flow.Width - 24, 0); // 24 for scrollbar padding
-                flow.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                flow.Dock = DockStyle.Right;
             }
 
             _chatArea.Controls.Add(wrapper);
             wrapper.BringToFront(); // panels dock top, newest at bottom by bringing to front
+            
+            // Re-adjust wrapper height in case of re-layouts
+            flow.SizeChanged += (s, e) => {
+                wrapper.Height = flow.PreferredSize.Height + wrapper.Padding.Bottom;
+            };
 
             // Scroll to bottom
             _chatArea.ScrollControlIntoView(wrapper);
@@ -677,6 +679,17 @@ namespace Botanika_Desktop.Forms
             }
 
             // ── Conversational catch-alls ─────────────────────────────────────
+            if (ContainsAny(q, "hello", "hi", "hey", "greetings", "good morning", "good afternoon"))
+            {
+                return "Hello! How can I help you manage Botanika today?";
+            }
+
+            if (ContainsAny(q, "thank", "thanks", "appreciate", "awesome", "great", "nice job", "good job", "cool"))
+            {
+                var replies = new[] { "You're welcome! I'm here to help.", "Happy to help!", "Anytime! Let me know if you need anything else.", "My pleasure! 🌿" };
+                return replies[new Random().Next(replies.Length)];
+            }
+
             if (ContainsAny(q, "what can", "what do", "who are", "tell me about", "are you"))
             {
                 if (ContainsAny(q, "you", "bot")) return "I'm your smart Botanika assistant! I know about your products, orders, clients, and revenue. Type \"help\" to see all my capabilities!";

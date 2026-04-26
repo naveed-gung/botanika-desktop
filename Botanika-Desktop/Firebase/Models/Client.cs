@@ -23,6 +23,12 @@ namespace Botanika_Desktop.Firebase.Models
 
         // Internal admin notes — not visible to the customer
         public string Notes { get; set; }
+        
+        // Profile picture URL or Base64 (used mostly for admin profile)
+        public string ProfilePicture { get; set; }
+        
+        // User role, e.g. "admin" or "customer"
+        public string Role { get; set; }
 
         // When did this customer first register / place an order
         public DateTime CreatedAt { get; set; }

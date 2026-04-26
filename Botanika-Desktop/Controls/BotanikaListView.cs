@@ -41,19 +41,30 @@ namespace Botanika_Desktop.Controls
 
         public void AdjustColumns()
         {
-            if (Columns.Count == 0) return;
+            if (Columns.Count == 0 || ClientSize.Width == 0) return;
             
-            int fixedWidth = 0;
-            // Sum all columns except the first one
-            for (int i = 1; i < Columns.Count; i++)
+            int currentTotal = 0;
+            int visibleCount = 0;
+            foreach (ColumnHeader col in Columns)
             {
-                fixedWidth += Columns[i].Width;
+                if (col.Width > 0) 
+                {
+                    currentTotal += col.Width;
+                    visibleCount++;
+                }
             }
-            
-            int newWidth = ClientSize.Width - fixedWidth - SystemInformation.VerticalScrollBarWidth - 2;
-            if (newWidth > 100)
+            if (visibleCount == 0 || currentTotal == 0) return;
+
+            int available = ClientSize.Width - 4; 
+            if (available <= currentTotal) return; 
+
+            double ratio = (double)available / currentTotal;
+            foreach (ColumnHeader col in Columns)
             {
-                Columns[0].Width = newWidth;
+                if (col.Width > 0)
+                {
+                    col.Width = (int)(col.Width * ratio);
+                }
             }
         }
 
