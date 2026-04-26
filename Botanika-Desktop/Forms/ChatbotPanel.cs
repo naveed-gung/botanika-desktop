@@ -245,7 +245,7 @@ namespace Botanika_Desktop.Forms
                 var oTask = FirebaseService.Instance.GetAllAsync<Order>("orders");
                 await Task.WhenAll(pTask, cTask, oTask);
                 _products = pTask.Result ?? new List<Product>();
-                _clients  = cTask.Result ?? new List<Client>();
+                _clients  = cTask.Result?.Where(c => c.Email?.ToLower() != "admin@botanika.com" && (c.Name == null || !c.Name.ToLower().Contains("admin"))).ToList() ?? new List<Client>();
                 _orders   = oTask.Result ?? new List<Order>();
                 _dataLoaded = true;
                 _statusLabel.Text = $"● Online · {_products.Count} products · {_clients.Count} clients · {_orders.Count} orders";
@@ -270,19 +270,19 @@ namespace Botanika_Desktop.Forms
             var bubble = new Panel
             {
                 AutoSize = true,
-                MaximumSize = new Size(Math.Max(300, _chatArea.ClientSize.Width - 120), 0),
+                MaximumSize = new Size(Math.Max(400, _chatArea.ClientSize.Width - 100), 0),
                 BackColor = isBot ? BotanikaColors.White : BotanikaColors.Primary,
-                Padding = new Padding(14, 10, 14, 10),
-                Margin = isBot ? new Padding(0, 6, 60, 6) : new Padding(60, 6, 0, 6)
+                Padding = new Padding(16, 12, 16, 12),
+                Margin = isBot ? new Padding(0, 6, 0, 6) : new Padding(0, 6, 0, 6)
             };
 
             var lbl = new Label
             {
                 Text = text,
-                Font = BotanikaFonts.Body(9.5f),
+                Font = BotanikaFonts.Body(10f),
                 ForeColor = isBot ? BotanikaColors.Charcoal : Color.White,
                 AutoSize = true,
-                MaximumSize = new Size(Math.Max(250, _chatArea.ClientSize.Width - 160), 0),
+                MaximumSize = new Size(Math.Max(350, _chatArea.ClientSize.Width - 140), 0),
                 Dock = DockStyle.Fill
             };
 
@@ -314,20 +314,23 @@ namespace Botanika_Desktop.Forms
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowOnly,
                 Dock = DockStyle.Top,
-                Padding = new Padding(0, 0, 0, 2),
+                Padding = new Padding(0, 0, 0, 8),
                 BackColor = Color.Transparent
             };
 
             var flow = new FlowLayoutPanel
             {
-                FlowDirection = isBot ? FlowDirection.TopDown : FlowDirection.TopDown,
+                FlowDirection = FlowDirection.TopDown,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowOnly,
                 WrapContents = false,
                 BackColor = Color.Transparent,
-                Dock = DockStyle.Top,
-                Padding = isBot ? new Padding(0) : new Padding(Math.Max(0, _chatArea.ClientSize.Width - bubble.MaximumSize.Width - 60), 0, 0, 0)
+                Dock = isBot ? DockStyle.Left : DockStyle.Right,
+                Padding = new Padding(0)
             };
+
+            // Sender name alignment
+            sender.Anchor = isBot ? AnchorStyles.Left : AnchorStyles.Right;
 
             flow.Controls.Add(sender);
             flow.Controls.Add(bubble);

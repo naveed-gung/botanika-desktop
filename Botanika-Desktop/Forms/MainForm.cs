@@ -192,13 +192,15 @@ namespace Botanika_Desktop.Forms
                 ("\u25c6",  "https://naveed-gung.dev/",          "Portfolio"),
             };
 
-            foreach (var (icon, url, tip) in socialDefs)
+            for (int i = 0; i < socialDefs.Length; i++)
             {
+                var def = socialDefs[i];
                 var btn = new Button
                 {
-                    Text = icon,
+                    Text = def.Item1,
                     Size = new Size(36, 36),
-                    Margin = new Padding(0, 0, 6, 0),
+                    // Total width 180, 4 buttons * 36 = 144, remaining 36 / 3 spaces = 12 spacing
+                    Margin = new Padding(0, 0, i == socialDefs.Length - 1 ? 0 : 12, 0),
                     FlatStyle = FlatStyle.Flat,
                     BackColor = Color.FromArgb(40, 255, 255, 255),
                     ForeColor = Color.FromArgb(200, 255, 255, 255),
@@ -209,8 +211,8 @@ namespace Botanika_Desktop.Forms
                 btn.FlatAppearance.BorderSize = 0;
                 btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 255, 255, 255);
                 var toolTip = new ToolTip();
-                toolTip.SetToolTip(btn, tip);
-                string target = url;
+                toolTip.SetToolTip(btn, def.Item3);
+                string target = def.Item2;
                 btn.Click += (s, e) => System.Diagnostics.Process.Start(target);
                 socialPanel.Controls.Add(btn);
             }

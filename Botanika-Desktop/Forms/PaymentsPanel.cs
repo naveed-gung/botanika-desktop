@@ -69,30 +69,19 @@ namespace Botanika_Desktop.Forms
             var addBtn = new Button
             {
                 Text      = "+ Add Payment",
-                Size      = new Size(120, 32),
-                Location  = new Point(pad + 700, 44),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.Primary,
-                ForeColor = Color.White,
-                Font      = BotanikaFonts.Body(9.5f, FontStyle.Bold),
-                Cursor    = Cursors.Hand
+                Size      = new Size(130, 32),
+                Location  = new Point(pad + 680, 44)
             };
-            addBtn.FlatAppearance.BorderSize = 0;
+            BotanikaTheme.StyleButton(addBtn);
             addBtn.Click += (s, e) => AddNew();
 
             var exportBtn = new Button
             {
                 Text      = "⬇ Export CSV",
                 Size      = new Size(110, 32),
-                Location  = new Point(pad + 580, 44),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = BotanikaColors.SandLight,
-                ForeColor = BotanikaColors.Charcoal,
-                Font      = BotanikaFonts.Body(9.5f),
-                Cursor    = Cursors.Hand
+                Location  = new Point(pad + 560, 44)
             };
-            exportBtn.FlatAppearance.BorderColor = BotanikaColors.Sand;
-            exportBtn.FlatAppearance.BorderSize  = 1;
+            BotanikaTheme.StyleSecondaryButton(exportBtn);
             exportBtn.Click += (s, e) => ExportData();
 
             // ── Tabbed lists ───────────────────────────────────────────────────

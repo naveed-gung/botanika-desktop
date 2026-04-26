@@ -39,7 +39,7 @@ namespace Botanika_Desktop.Controls
             AdjustColumns();
         }
 
-        private void AdjustColumns()
+        public void AdjustColumns()
         {
             if (Columns.Count == 0) return;
             
@@ -60,6 +60,7 @@ namespace Botanika_Desktop.Controls
         // Auto-size the list to fit its content — no endless whitespace
         public void AutoFitHeight(int minHeight = 80, int maxHeight = 600)
         {
+            AdjustColumns();
             if (Items.Count == 0)
             {
                 Height = minHeight;

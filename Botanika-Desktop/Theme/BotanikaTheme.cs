@@ -97,21 +97,28 @@ namespace Botanika_Desktop.Theme
 
         // Clean input box — borderline on bottom only feel isn't easy in WinForms,
         // so we settle for a subtle border and clean white background
+        // Modern, borderless input with rounded edges
         public static void StyleTextBox(TextBox txt)
         {
             txt.BackColor  = BotanikaColors.White;
             txt.ForeColor  = BotanikaColors.Charcoal;
-            txt.BorderStyle = BorderStyle.FixedSingle;
-            txt.Font       = BotanikaFonts.Body(9.5f);
+            txt.BorderStyle = BorderStyle.None;
+            txt.Font       = BotanikaFonts.Body(10f);
+            txt.AutoSize   = false;
+            txt.Height     = 30;
+            txt.HandleCreated += (s, e) => ApplyRoundedCorners(txt, 8);
+            txt.SizeChanged   += (s, e) => ApplyRoundedCorners(txt, 8);
         }
 
-        // ComboBox to match our text boxes
+        // ComboBox to match our modern text boxes
         public static void StyleComboBox(ComboBox cmb)
         {
             cmb.BackColor  = BotanikaColors.White;
             cmb.ForeColor  = BotanikaColors.Charcoal;
             cmb.FlatStyle  = FlatStyle.Flat;
-            cmb.Font       = BotanikaFonts.Body(9.5f);
+            cmb.Font       = BotanikaFonts.Body(10f);
+            cmb.HandleCreated += (s, e) => ApplyRoundedCorners(cmb, 8);
+            cmb.SizeChanged   += (s, e) => ApplyRoundedCorners(cmb, 8);
         }
 
         // Applies rounded corners to all card-like white panels in a control tree.
