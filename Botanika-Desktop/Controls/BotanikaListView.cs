@@ -79,7 +79,16 @@ namespace Botanika_Desktop.Controls
                     
                     if (col.Width < designWidth) col.Width = designWidth; // prevent shrinking below design
                     if (col.Width > 400) col.Width = 400; // prevent a single column from being infinitely wide
+                    
+                    totalW += col.Width;
                 }
+            }
+            
+            if (totalW > 0)
+            {
+                Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                // Hug the columns tightly to prevent empty green header space stretching out
+                Width = totalW + 2; 
             }
         }
 
