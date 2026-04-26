@@ -56,8 +56,33 @@ namespace Botanika_Desktop.Controls
 
         public void AdjustColumns()
         {
-            // Removed proportional scaling to keep columns tight.
-            // We now rely on AutoFitWidth to shrink the table itself.
+            if (Columns.Count == 0 || ClientSize.Width == 0) return;
+            
+            int totalFixed = 0;
+            int flexCol = -1;
+            
+            // Find a good column to stretch (Description or Name, otherwise the second to last)
+            for (int i = 0; i < Columns.Count; i++)
+            {
+                if (Columns[i].Width == 0) continue;
+                if (Columns[i].Text.ToLower().Contains("description") || Columns[i].Text.ToLower().Contains("name") || Columns[i].Text.ToLower().Contains("party"))
+                    flexCol = i;
+            }
+            
+            if (flexCol == -1) flexCol = Columns.Count - 2;
+            if (flexCol < 0) flexCol = 0;
+
+            for (int i = 0; i < Columns.Count; i++)
+            {
+                if (i != flexCol && Columns[i].Width > 0)
+                    totalFixed += Columns[i].Width;
+            }
+            
+            int flexWidth = ClientSize.Width - totalFixed - 4; // 4 for borders/padding
+            if (flexWidth > 50 && Columns[flexCol].Width > 0)
+            {
+                Columns[flexCol].Width = flexWidth;
+            }
         }
 
         // Auto-size the list to fit its content — no endless whitespace
@@ -128,9 +153,9 @@ namespace Botanika_Desktop.Controls
             Rectangle textBounds = Rectangle.Inflate(e.Bounds, -10, 0);
 
             // Draw image if available for the first column
-            if (e.ColumnIndex == 0 && e.Item.ImageList != null && e.Item.ImageIndex >= 0)
+            if (e.ColumnIndex == 0 && this.SmallImageList != null && e.Item.ImageIndex >= 0 && e.Item.ImageIndex < this.SmallImageList.Images.Count)
             {
-                Image img = e.Item.ImageList.Images[e.Item.ImageIndex];
+                Image img = this.SmallImageList.Images[e.Item.ImageIndex];
                 if (img != null)
                 {
                     // Draw a circular avatar
