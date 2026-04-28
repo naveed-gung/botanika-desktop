@@ -53,6 +53,14 @@ Track the lifecycle of every transaction.
 
 ---
 
+## ✅ Common Admin Tasks
+
+- **Add a Product**: Open the Products panel, click the add action, complete the product details, and save to sync the new record to Firestore.
+- **Update an Order Status**: Open the Orders panel, select the target order, change its status, and save so the order lifecycle remains accurate.
+- **Export Data**: Use the export actions available in management panels to generate CSV or Markdown output for reporting.
+
+---
+
 ## 💡 Pro Tips
 - **Double-Click**: In most tables, double-clicking a row will open the detailed edit view for that item.
 - **Responsive Window**: You can resize the Botanika window to any size; all charts, tables, and KPI cards will dynamically re-anchor themselves to fit your screen perfectly.
